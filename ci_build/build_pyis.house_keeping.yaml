@@ -1,0 +1,42 @@
+jobs:
+- job: 'house_keeping'
+  displayName: house keeping
+
+  pool:
+    vmImage: ubuntu-20.04
+
+  variables:
+    pythonVer: 3.7
+
+  steps:
+  - checkout: self
+    lfs: true
+  
+  - task: UsePythonVersion@0
+    displayName: 'use python $(pythonVer)'
+    inputs:
+      versionSpec: $(pythonVer)
+
+  - script: |
+      python -m pip install --upgrade pip setuptools wheel twine PyYAML cmakelang mypy
+      sudo apt-get install -y clang-format
+      sudo apt-get install -y clang-tidy
+    workingDirectory: .
+    displayName: install dependent tools
+ 
+  - script: |
+      ./tools/run-clang-format.sh && \
+      python ./tools/run-cmake-format.py --check
+    workingDirectory: .
+    displayName: run cpp/cmake format check
+  
+  - script: |
+      cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DPYTHON=$(pythonVer) -DTORCH_BACKEND=ON -DONNX_BACKEND=ON -DPYTHON_BACKEND=ON
+      cmake --build build -j4
+    workingDirectory: .
+    displayName: build pyis all
+  
+  - script: |
+      ./tools/run-clang-tidy.sh
+    workingDirectory: .
+    displayName: run clang tidy check

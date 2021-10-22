@@ -1,0 +1,3 @@
+LIBRARY "pyis_onnx.dll"
+EXPORTS
+ RegisterCustomOps @1

@@ -1,0 +1,2 @@
+recursive-include pyis *.pyd *.so *.dll *.py
+recursive-include pyis/torch/lib *

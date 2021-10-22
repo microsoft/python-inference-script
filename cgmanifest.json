@@ -1,0 +1,123 @@
+{
+  "Registrations": [
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "commitHash": "60f1adf6f35d6f3e031c334b33dfe8399d6f8a9d",
+          "repositoryUrl": "https://github.com/cjlin1/liblinear.git"
+        }
+      }
+    },
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "commitHash": "d69c22dd61a2f006dcfe1e3ea8468a3ecaf931aa",
+          "repositoryUrl": "https://github.com/pytorch/pytorch.git"
+        }
+      }
+    },
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "commitHash": "b227d629a85e8797d6c28260f7a72684bea5255c",
+          "repositoryUrl": "https://bitbucket.org/wbenny/ziplib.git"
+        }
+      }
+    },
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "commitHash": "9e8b86fd2d9806672cc73133d21780dd182bfd24",
+          "repositoryUrl": "https://github.com/fmtlib/fmt.git"
+        }
+      }
+    },
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "commitHash": "4bb190bf997ed973e1c6a3a59d8fc3b3188eb4e2",
+          "repositoryUrl": "https://github.com/i-lovelife/foma.git"
+        }
+      }
+    },
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "commitHash": "703bd9caab50b139428cea1aaff9974ebee5742e",
+          "repositoryUrl": "https://github.com/google/googletest.git"
+        }
+      }
+    },
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "commitHash": "d4106deeb65c21eed3ed40df149efefeb72fe9a4",
+          "repositoryUrl": "https://github.com/microsoft/onnxruntime.git"
+        }
+      }
+    },
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "commitHash": "8de7772cc72daca8e947b79b83fea46214931604",
+          "repositoryUrl": "https://github.com/pybind/pybind11.git"
+        }
+      }
+    },
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "commitHash": "f54b0e47a08782a6131cc3d60f94d038fa6e0a51",
+          "repositoryUrl": "https://github.com/Tencent/rapidjson.git"
+        }
+      }
+    },
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "commitHash": "8e08f47b11b413302749c0d8b17a1c94777495d5",
+          "repositoryUrl": "https://github.com/google/re2.git"
+        }
+      }
+    },
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "commitHash": "5b4c4f3f770acbd25400d866f3fc2fdf669d5b7e",
+          "repositoryUrl": "https://github.com/gabime/spdlog.git"
+        }
+      }
+    },
+    {
+      "component": {
+        "Type": "other",
+        "Other": {
+          "Name": "cedar",
+          "Version": "2014-06-24",
+          "DownloadUrl": "http://www.tkl.iis.u-tokyo.ac.jp/~ynaga/cedar/cedar-latest.tar.gz"
+        }
+      }
+    },
+    {
+      "component": {
+        "Type": "git",
+        "git": {
+          "commitHash": "eaa4be7b96c99ad56effc351aa44d0bef04da5a3",
+          "repositoryUrl": "https://github.com/boostorg/uuid.git"
+        }
+      }
+    }
+  ],
+  "Version": 1
+}

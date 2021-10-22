@@ -1,0 +1,14 @@
+parameters:
+- name: push_pip
+  displayName: Release Pip Package
+  type: boolean
+  default: false
+
+jobs:
+- template: build_pyis.house_keeping.yaml
+- template: build_pyis.windows.yaml
+  parameters:
+    push_pip: ${{ parameters.push_pip }}
+- template: build_pyis.linux.yaml
+  parameters:
+    push_pip: ${{ parameters.push_pip }}

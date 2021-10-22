@@ -1,0 +1,174 @@
+parameters:
+- name: push_pip
+  type: boolean
+  default: false
+
+jobs:
+- job: 'pyis_python_linux_x64'
+  dependsOn: 'house_keeping'
+  displayName: pyis-python linux-x64
+
+  pool:
+    vmImage: ubuntu-20.04
+
+  variables:
+    artifactDir: $(Build.ArtifactStagingDirectory)
+
+  strategy:
+    matrix:
+      'py37':
+        pythonVer: 3.7
+        artifactName: pyis-python37-linux-x64
+      'py38':
+        pythonVer: 3.8
+        artifactName: pyis-python38-linux-x64
+      'py39':
+        pythonVer: 3.9
+        artifactName: pyis-python39-linux-x64
+
+  steps:
+  - checkout: self
+    lfs: true
+  
+  - task: UsePythonVersion@0
+    displayName: 'use python $(pythonVer)'
+    inputs:
+      versionSpec: $(pythonVer)
+
+  - script: |
+      python -m pip install --upgrade pip setuptools wheel twine onnxruntime mypy transformers
+    workingDirectory: .
+    displayName: install dependent tools
+
+  - script: |
+      cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DPYTHON="$(pythonVer)" -DTORCH_BACKEND=OFF -DONNX_BACKEND=OFF -DPYTHON_BACKEND=ON
+      cmake --build build -j4
+      export CTEST_OUTPUT_ON_FAILURE=TRUE
+      cmake --build build --target test
+    workingDirectory: .
+    displayName: build and test pyis-python
+
+  - script: |
+      cp py/pyis-python/dist/*.whl $(artifactDir)
+    displayName: copy targets to staging folder
+
+  - publish: $(artifactDir)
+    artifact: $(artifactName)
+
+- job: 'pyis_torch_linux_x64'
+  dependsOn: 'house_keeping'
+  displayName: pyis-torch linux-x64
+
+  variables:
+    pythonVer: 3.7
+    artifactName: pyis-torch-linux-x64
+    artifactDir: $(Build.ArtifactStagingDirectory)
+
+  pool:
+    vmImage: ubuntu-20.04
+
+  steps:
+  - checkout: self
+    lfs: true
+  
+  - task: UsePythonVersion@0
+    displayName: 'use python $(pythonVer)'
+    inputs:
+      versionSpec: $(pythonVer)
+
+  - script: |
+      python -m pip install --upgrade pip setuptools wheel twine onnxruntime mypy transformers
+    workingDirectory: .
+    displayName: install dependent tools
+  
+  - script: |
+      rm build/CMakeCache.txt
+      cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DPYTHON="$(pythonVer)" -DTORCH="1.9.0" -DTORCH_BACKEND=ON -DONNX_BACKEND=OFF -DPYTHON_BACKEND=OFF
+      cmake --build build -j4
+      pip install torch==1.9.0
+      export CTEST_OUTPUT_ON_FAILURE=TRUE
+      cmake --build build --target test
+    workingDirectory: .
+    displayName: build and test pyis-torch190
+
+  - script: |
+      cp py/pyis-torch/dist/*.whl $(artifactDir)
+    displayName: copy targets to staging folder
+
+  - publish: $(artifactDir)
+    artifact: $(artifactName)
+
+- job: 'pyis_onnx_linux_x64'
+  dependsOn: 'house_keeping'
+  displayName: pyis-onnx linux-x64
+
+  variables:
+    pythonVer: 3.7
+    artifactName: pyis-onnx-linux-x64
+    artifactDir: $(Build.ArtifactStagingDirectory)
+
+  pool:
+    vmImage: ubuntu-20.04
+
+  steps:
+  - checkout: self
+    lfs: true
+  
+  - task: UsePythonVersion@0
+    displayName: 'use python $(pythonVer)'
+    inputs:
+      versionSpec: $(pythonVer)
+
+  - script: |
+      python -m pip install --upgrade pip setuptools wheel twine onnx==1.9.0 onnxruntime mypy transformers
+    workingDirectory: .
+    displayName: install dependent tools
+ 
+  - script: |
+      cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DPYTHON="$(pythonVer)" -DTORCH_BACKEND=OFF -DONNX_BACKEND=ON -DPYTHON_BACKEND=ON
+      cmake --build build -j4
+      export CTEST_OUTPUT_ON_FAILURE=TRUE
+      cmake --build build --target test
+    workingDirectory: .
+    displayName: build and test pyis-onnx
+
+  - script: |
+      cp py/pyis-onnx/dist/*.whl $(artifactDir)
+    displayName: copy targets to staging folder
+
+  - publish: $(artifactDir)
+    artifact: $(artifactName)
+
+- job: 'pyis_cxx_optimized_linux_x64'
+  dependsOn: 'house_keeping'
+  displayName: pyis-cxx-optimized linux-x64
+
+  variables:
+    pythonVer: 3.7
+    artifactName: pyis-cxx-optimized-linux-x64
+    artifactDir: $(Build.ArtifactStagingDirectory)
+
+  pool:
+    vmImage: ubuntu-20.04
+
+  steps:
+  - checkout: self
+    lfs: true
+  
+  - task: UsePythonVersion@0
+    displayName: 'use python $(pythonVer)'
+    inputs:
+      versionSpec: $(pythonVer)
+
+  - script: |
+      python -m pip install --upgrade pip setuptools wheel twine onnxruntime transformers
+    workingDirectory: .
+    displayName: install dependent tools
+ 
+  - script: |
+      cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DPYTHON="$(pythonVer)" -DPYIS_NO_EXCEPTIONS=ON -DPYIS_NO_RTTI=ON -DTORCH_BACKEND=OFF -DONNX_BACKEND=OFF -DPYTHON_BACKEND=OFF
+      cmake --build build -j4
+      export CTEST_OUTPUT_ON_FAILURE=TRUE
+      cmake --build build --target test
+    workingDirectory: .
+    displayName: build and test pyis-onnx

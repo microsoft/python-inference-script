@@ -1,0 +1,59 @@
+parameters:
+- name: torch
+  displayName: PyTorch Version
+  type: string
+  default: 1.8.1
+  values:
+  - 1.8.1
+  - 1.9.0
+- name: python
+  displayName: Python Version
+  type: string
+  default: 3.7
+  values:
+  - 3.6
+  - 3.7
+  - 3.8
+  - 3.9
+  
+jobs:
+- job: 'libtorch_windows'
+
+  strategy:
+    matrix:
+      'x86_64':
+        arch: x64
+
+  timeoutInMinutes: 240
+  
+  pool:
+    name: Hosted Windows 2019 with VS2019
+
+  variables:
+    torchVer: ${{ parameters.torch }}
+    pythonVer: ${{ parameters.python }}
+    artifactName: libtorch-win-$(arch)-release-$(torchVer)
+    artifactDir: $(Build.ArtifactStagingDirectory)
+
+  steps:
+  - checkout: self
+    lfs: true
+  
+  - task: UsePythonVersion@0
+    displayName: 'use python $(pythonVer)'
+    inputs:
+      versionSpec: $(pythonVer)
+
+  - script: |
+      python -m pip install --upgrade pip setuptools wheel twine typing_extensions PyYAML
+    workingDirectory: .
+    displayName: install dependent tools
+ 
+  - script: |
+      cmake -S ./third_party/libtorch/ -B libtorch_build -DCMAKE_INSTALL_PREFIX=$(artifactDir) -DTORCH=$(torchVer) -DPYTHON=$(pythonVer) -G "Visual Studio 16 2019" -A $(arch)
+      cmake --build libtorch_build
+    workingDirectory: .
+    displayName: build libtorch
+
+  - publish: $(artifactDir)
+    artifact: $(artifactName)

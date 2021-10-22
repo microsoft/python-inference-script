@@ -1,0 +1,170 @@
+parameters:
+- name: push_pip
+  type: boolean
+  default: false
+
+jobs:
+- job: 'pyis_python_win_x64'
+  dependsOn: 'house_keeping'
+  displayName: pyis-python win-x64
+
+  variables:
+    artifactDir: $(Build.ArtifactStagingDirectory)
+
+  strategy:
+    matrix:
+      'py37':
+        pythonVer: 3.7
+        artifactName: pyis-python37-win-x64
+      'py38':
+        pythonVer: 3.8
+        artifactName: pyis-python38-win-x64
+      'py39':
+        pythonVer: 3.9
+        artifactName: pyis-python39-win-x64
+
+  pool:
+    name: Hosted Windows 2019 with VS2019
+
+  steps:
+  - checkout: self
+    lfs: true
+  
+  - task: UsePythonVersion@0
+    displayName: 'use python $(pythonVer)'
+    inputs:
+      versionSpec: $(pythonVer)
+
+  - script: |
+      python -m pip install --upgrade pip setuptools wheel twine onnxruntime mypy transformers
+    workingDirectory: .
+    displayName: install dependent tools
+ 
+  - script: |
+      cmake -S . -B build -G "Visual Studio 16 2019" -A x64 -DPYTHON="$(pythonVer)" -DTORCH_BACKEND=OFF -DONNX_BACKEND=OFF -DPYTHON_BACKEND=ON
+      cmake --build build --config RelWithDebInfo -- /m:4
+      cmake --build build --config RelWithDebInfo --target RUN_TESTS
+    workingDirectory: .
+    displayName: build and test pyis-python
+
+  - script: |
+      cp py/pyis-python/dist/*.whl $(artifactDir)
+    displayName: copy targets to staging folder
+
+  - publish: $(artifactDir)
+    artifact: $(artifactName)
+
+- job: 'pyis_torch_win_x64'
+  dependsOn: 'house_keeping'
+  displayName: pyis-torch win-x64
+
+  variables:
+    pythonVer: 3.7
+    artifactName: pyis-torch-win-x64
+    artifactDir: $(Build.ArtifactStagingDirectory)
+
+  pool:
+    name: Hosted Windows 2019 with VS2019
+
+  steps:
+  - checkout: self
+    lfs: true
+  
+  - task: UsePythonVersion@0
+    displayName: 'use python $(pythonVer)'
+    inputs:
+      versionSpec: $(pythonVer)
+
+  - script: |
+      python -m pip install --upgrade pip setuptools wheel twine onnxruntime mypy transformers
+    workingDirectory: .
+    displayName: install dependent tools
+  
+  - script: |
+      del /F /Q build\CMakeCache.txt
+      cmake -S . -B build -G "Visual Studio 16 2019" -A x64 -DPYTHON=$(pythonVer) -DTORCH="1.9.0" -DTORCH_BACKEND=ON -DONNX_BACKEND=OFF -DPYTHON_BACKEND=OFF
+      cmake --build build --config RelWithDebInfo -- /m:4
+      python -m pip install torch==1.9.0
+      cmake --build build --config RelWithDebInfo --target RUN_TESTS
+    workingDirectory: .
+    displayName: build and test pyis-torch190
+
+  - script: |
+      cp py/pyis-torch/dist/*.whl $(artifactDir)
+    displayName: copy targets to staging folder
+
+  - publish: $(artifactDir)
+    artifact: $(artifactName)
+
+- job: 'pyis_onnx_win_x64'
+  dependsOn: 'house_keeping'
+  displayName: pyis-onnx win-x64
+
+  variables:
+    pythonVer: 3.7
+    artifactName: pyis-onnx-win-x64
+    artifactDir: $(Build.ArtifactStagingDirectory)
+
+  pool:
+    name: Hosted Windows 2019 with VS2019
+
+  steps:
+  - checkout: self
+    lfs: true
+  
+  - task: UsePythonVersion@0
+    displayName: 'use python $(pythonVer)'
+    inputs:
+      versionSpec: $(pythonVer)
+
+  - script: |
+      python -m pip install --upgrade pip setuptools wheel twine onnx==1.9.0 onnxruntime mypy transformers
+    workingDirectory: .
+    displayName: install dependent tools
+ 
+  - script: |
+      cmake -S . -B build -G "Visual Studio 16 2019" -A x64 -DPYTHON=$(pythonVer) -DTORCH_BACKEND=OFF -DONNX_BACKEND=ON -DPYTHON_BACKEND=ON
+      cmake --build build --config RelWithDebInfo -- /m:4
+      cmake --build build --config RelWithDebInfo --target RUN_TESTS
+    workingDirectory: .
+    displayName: build and test pyis-onnx
+
+  - script: |
+      cp py/pyis-onnx/dist/*.whl $(artifactDir)
+    displayName: copy targets to staging folder
+
+  - publish: $(artifactDir)
+    artifact: $(artifactName)
+
+- job: 'pyis_cxx_optimized_win_x64'
+  dependsOn: 'house_keeping'
+  displayName: pyis-cxx-optimized win-x64
+
+  variables:
+    pythonVer: 3.7
+    artifactName: pyis-cxx-optimized-win-x64
+    artifactDir: $(Build.ArtifactStagingDirectory)
+
+  pool:
+    name: Hosted Windows 2019 with VS2019
+
+  steps:
+  - checkout: self
+    lfs: true
+  
+  - task: UsePythonVersion@0
+    displayName: 'use python $(pythonVer)'
+    inputs:
+      versionSpec: $(pythonVer)
+
+  - script: |
+      python -m pip install --upgrade pip setuptools wheel twine onnxruntime transformers
+    workingDirectory: .
+    displayName: install dependent tools
+ 
+  - script: |
+      cmake -S . -B build -G "Visual Studio 16 2019" -A x64 -DPYTHON=$(pythonVer) -DPYIS_NO_EXCEPTIONS=ON -DPYIS_NO_RTTI=ON -DTORCH_BACKEND=OFF -DONNX_BACKEND=OFF -DPYTHON_BACKEND=OFF
+      cmake --build build --config RelWithDebInfo -- /m:4
+      cmake --build build --config RelWithDebInfo --target RUN_TESTS
+    workingDirectory: .
+    displayName: build and test pyis-cxx-optimized
