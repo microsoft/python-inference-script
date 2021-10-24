@@ -1,0 +1,381 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>LibTorch Backend 🔥 &mdash; Python Inference Script 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ONNXRuntime Backend" href="onnxruntime.html" />
+    <link rel="prev" title="CPython Backend 🐍" href="cpython.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Python Inference Script
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Model Authoring</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../operators/a_list_of_operators.html">Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/a_list_of_tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model Deployment</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cpython.html">CPython Backend 🐍</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">LibTorch Backend 🔥</a></li>
+<li class="toctree-l1"><a class="reference internal" href="onnxruntime.html">ONNXRuntime Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="native_cpp_library.html">Native C++ Library</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/why_we_build_pyis.html">Why We Build PyIS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/build_from_source.html">Build from Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/house_keeping.html">House Keeping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/build_libtorch.html">Build LibTorch for JIT</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Python Inference Script</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>LibTorch Backend 🔥</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/backends/libtorch.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="libtorch-backend-fire">
+<h1>LibTorch Backend 🔥<a class="headerlink" href="#libtorch-backend-fire" title="Permalink to this headline">¶</a></h1>
+<p>The LibTorch backend is the right choice when:</p>
+<ul class="simple">
+<li><p>You plan to host the model on servers as remote services. But if you don’t mind the binary size overhead made by <a class="reference external" href="https://pytorch.org/mobile/android/">LibTorch Mobile</a>, you could also deploy the model to mobile devices.</p></li>
+<li><p>Your serving platform doesn’t provide a Python interpreter.</p></li>
+<li><p>You care about throughput and need to avoid <a class="reference external" href="https://wiki.python.org/moin/GlobalInterpreterLock">Python GIL</a>.</p></li>
+<li><p>You want to embed the model into your own C/C++/Java/C# applications.</p></li>
+</ul>
+<div class="section" id="author-model-with-python">
+<h2>Author Model with Python<a class="headerlink" href="#author-model-with-python" title="Permalink to this headline">¶</a></h2>
+<p>As an example, we will buid a rule-based model. The model tells if an user query is a weather related one by checking if it appears in the allow-list. It supports two languages:English and Chinese.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">pyis.torch</span> <span class="kn">import</span> <span class="n">ops</span>
+
+<span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trie1</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">CedarTrie</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trie1</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s1">&#39;what is the weather&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trie1</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s1">&#39;will it rain&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">trie2</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">CedarTrie</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trie2</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s1">&#39;今天天气怎么样&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trie2</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s1">&#39;明天会下雨吗&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">locale</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">locale</span> <span class="o">==</span> <span class="s1">&#39;en-us&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trie1</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">locale</span> <span class="o">==</span> <span class="s1">&#39;zh-cn&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trie2</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">()</span>
+<span class="n">is_weather</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="s1">&#39;what is the weather&#39;</span><span class="p">,</span> <span class="s1">&#39;en-us&#39;</span><span class="p">)</span> 
+<span class="nb">print</span><span class="p">(</span><span class="n">is_weather</span><span class="p">)</span> <span class="c1"># True</span>
+<span class="n">is_weather</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="s1">&#39;what is the answer&#39;</span><span class="p">,</span> <span class="s1">&#39;en-us&#39;</span><span class="p">)</span> 
+<span class="nb">print</span><span class="p">(</span><span class="n">is_weather</span><span class="p">)</span> <span class="c1"># False</span>
+<span class="n">is_weather</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="s1">&#39;明天会下雨吗&#39;</span><span class="p">,</span> <span class="s1">&#39;zh-cn&#39;</span><span class="p">)</span> 
+<span class="nb">print</span><span class="p">(</span><span class="n">is_weather</span><span class="p">)</span> <span class="c1"># True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="save-model">
+<h2>Save Model<a class="headerlink" href="#save-model" title="Permalink to this headline">¶</a></h2>
+<p>The model object with all dependent files are serialized to .pt (torchscript) file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># serialize the model</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;tmp&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">model_file</span> <span class="o">=</span> <span class="s1">&#39;tmp/model.pt&#39;</span>
+<span class="n">scripted_model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">script</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">save</span><span class="p">(</span><span class="n">scripted_model</span><span class="p">,</span> <span class="n">model_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="load-model-and-validate-in-python">
+<h2>Load Model and Validate in Python<a class="headerlink" href="#load-model-and-validate-in-python" title="Permalink to this headline">¶</a></h2>
+<p>Load the model with Pytorch and run the loaded model.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyis.torch</span> <span class="kn">import</span> <span class="n">load</span>
+
+<span class="c1"># de-serialize the model</span>
+<span class="n">loaded_model</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">model_file</span><span class="p">)</span>
+<span class="n">is_weather</span> <span class="o">=</span> <span class="n">loaded_model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="s1">&#39;what is the weather&#39;</span><span class="p">,</span> <span class="s1">&#39;en-us&#39;</span><span class="p">)</span> 
+<span class="nb">print</span><span class="p">(</span><span class="n">is_weather</span><span class="p">)</span> <span class="c1"># True</span>
+<span class="n">is_weather</span> <span class="o">=</span> <span class="n">loaded_model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="s1">&#39;what is the answer&#39;</span><span class="p">,</span> <span class="s1">&#39;en-us&#39;</span><span class="p">)</span> 
+<span class="nb">print</span><span class="p">(</span><span class="n">is_weather</span><span class="p">)</span> <span class="c1"># False</span>
+<span class="n">is_weather</span> <span class="o">=</span> <span class="n">loaded_model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="s1">&#39;明天会下雨吗&#39;</span><span class="p">,</span> <span class="s1">&#39;zh-cn&#39;</span><span class="p">)</span> 
+<span class="nb">print</span><span class="p">(</span><span class="n">is_weather</span><span class="p">)</span> <span class="c1"># True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="load-model-and-run-without-python">
+<h2>Load Model and Run without Python<a class="headerlink" href="#load-model-and-run-without-python" title="Permalink to this headline">¶</a></h2>
+<p>The ultimate step is to deploy the generated torchscript to production environment (normally C++). Below is the sample code to load and run the model in C++. Please refer to <a class="reference external" href="https://pytorch.org/tutorials/advanced/torch_script_custom_ops.html">this pytorch tutorial</a> for more details on running pytorch in C++.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;pyis/pyis_c_api.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;torch/script.h&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">auto</span><span class="o">*</span> <span class="n">pyis_api</span> <span class="o">=</span> <span class="n">GetPyisApi</span><span class="p">();</span>
+    <span class="k">auto</span><span class="o">*</span> <span class="n">context</span> <span class="o">=</span> <span class="n">pyis_api</span><span class="o">-&gt;</span><span class="n">ModelContextCreate</span><span class="p">(</span><span class="s">&quot;[PATH_TO_PT_MODEL_FILE]&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">);</span>
+    <span class="n">pyis_api</span><span class="o">-&gt;</span><span class="n">ModelContextActivate</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+
+    <span class="n">torch</span><span class="o">::</span><span class="n">jit</span><span class="o">::</span><span class="n">script</span><span class="o">::</span><span class="n">Module</span> <span class="k">module</span><span class="p">;</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="k">module</span> <span class="o">=</span> <span class="n">torch</span><span class="o">::</span><span class="n">jit</span><span class="o">::</span><span class="n">load</span><span class="p">(</span><span class="s">&quot;[PATH_TO_PT_MODEL_FILE]&quot;</span><span class="p">);</span>
+
+        <span class="k">auto</span> <span class="n">query</span> <span class="o">=</span> <span class="n">torch</span><span class="o">::</span><span class="n">IValue</span><span class="p">(</span><span class="s">&quot;what is the weather&quot;</span><span class="p">);</span>
+        <span class="k">auto</span> <span class="n">locale</span> <span class="o">=</span> <span class="n">torch</span><span class="o">::</span><span class="n">IValue</span><span class="p">(</span><span class="s">&quot;en-us&quot;</span><span class="p">);</span>
+        
+        <span class="k">auto</span> <span class="n">output</span> <span class="o">=</span> <span class="k">module</span><span class="p">.</span><span class="n">forward</span><span class="p">({</span><span class="n">query</span><span class="p">,</span> <span class="n">locale</span><span class="p">}).</span><span class="n">toBool</span><span class="p">();</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Weather intent : &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">output</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;error loading or running the model &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="mi">-1</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Along with CMakeLists.txt file to build the sample.</p>
+<div class="highlight-CMake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.12</span> <span class="s">FATAL_ERROR</span><span class="p">)</span>
+
+<span class="nb">project</span><span class="p">(</span><span class="s">pyis_torch_test</span> <span class="s">VERSION</span> <span class="s">0.1</span><span class="p">)</span>
+
+<span class="nb">include</span><span class="p">(</span><span class="s">FetchContent</span><span class="p">)</span>
+<span class="nb">FetchContent_Declare</span><span class="p">(</span>
+    <span class="s">pyis</span>
+    <span class="s">GIT_REPOSITORY</span> <span class="s">https://github.com/microsoft/python-inference-script</span>
+    <span class="s">GIT_TAG</span> <span class="s">main</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">PYTHON_BACKEND</span>
+    <span class="s">OFF</span>
+    <span class="s">CACHE</span> <span class="s">BOOL</span> <span class="s2">&quot;&quot;</span> <span class="s">FORCE</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">TORCH_BACKEND</span>
+    <span class="s">ON</span>
+    <span class="s">CACHE</span> <span class="s">BOOL</span> <span class="s2">&quot;&quot;</span> <span class="s">FORCE</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">ONNX_BACKEND</span>
+    <span class="s">OFF</span>
+    <span class="s">CACHE</span> <span class="s">BOOL</span> <span class="s2">&quot;&quot;</span> <span class="s">FORCE</span><span class="p">)</span>
+
+<span class="nb">FetchContent_MakeAvailable</span><span class="p">(</span><span class="s">pyis</span><span class="p">)</span>
+
+<span class="nb">add_executable</span><span class="p">(</span><span class="s">pyis_torch_test</span><span class="p">)</span>
+<span class="nb">target_sources</span><span class="p">(</span><span class="s">pyis_torch_test</span> <span class="s">PRIVATE</span> <span class="s">test.cpp</span><span class="p">)</span>
+
+<span class="c"># link libtorch library</span>
+<span class="nb">find_package</span><span class="p">(</span><span class="s">Torch</span> <span class="s">REQUIRED</span> <span class="s">PATHS</span> <span class="o">${</span><span class="nv">TORCH_INSTALL_DIR</span><span class="o">}</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">pyis_torch_test</span> <span class="s2">&quot;${TORCH_LIBRARIES}&quot;</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">pyis_torch_test</span> <span class="s">-Wl,--no-as-needed</span> <span class="s">pyis_torch</span><span class="p">)</span>
+
+<span class="nb">if</span> <span class="p">(</span><span class="s">MSVC</span><span class="p">)</span>
+    <span class="nb">file</span><span class="p">(</span><span class="s">GLOB</span> <span class="s">TORCH_DLLS</span> <span class="s2">&quot;${TORCH_INSTALL_PREFIX}/lib/*.dll&quot;</span><span class="p">)</span>
+    <span class="nb">add_custom_command</span><span class="p">(</span><span class="s">TARGET</span> <span class="s">pyis_torch_test</span>
+                       <span class="s">POST_BUILD</span>
+                       <span class="s">COMMAND</span> <span class="o">${</span><span class="nv">CMAKE_COMMAND</span><span class="o">}</span> <span class="s">-E</span> <span class="s">copy_if_different</span> <span class="o">${</span><span class="nv">TORCH_DLLS</span><span class="o">}</span> <span class="o">$&lt;</span><span class="nv">TARGET_FILE_DIR:pyis_torch_test</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="nb">endif</span> <span class="p">(</span><span class="s">MSVC</span><span class="p">)</span>
+
+<span class="nb">add_custom_command</span><span class="p">(</span><span class="s">TARGET</span> <span class="s">pyis_torch_test</span>
+                   <span class="s">POST_BUILD</span>
+                   <span class="s">COMMAND</span> <span class="o">${</span><span class="nv">CMAKE_COMMAND</span><span class="o">}</span> <span class="s">-E</span> <span class="s">copy_if_different</span> <span class="o">$&lt;</span><span class="nv">TARGET_FILE:pyis_torch</span><span class="o">&gt;</span> <span class="o">$&lt;</span><span class="nv">TARGET_FILE_DIR:pyis_torch_test</span><span class="o">&gt;</span><span class="p">)</span>
+
+<span class="c"># include pyis c api header</span>
+<span class="nb">target_include_directories</span><span class="p">(</span><span class="s">pyis_torch_test</span> <span class="s">PRIVATE</span> <span class="o">${</span><span class="nv">pyis_SOURCE_DIR</span><span class="o">}</span><span class="s">/pyis/c_api/include</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Build this sample</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake -S . -B build -A x64
+cmake --build build
+</pre></div>
+</div>
+<p>Now we can run the successfully built executable:</p>
+<div class="highlight-bat notranslate"><div class="highlight"><pre><span></span><span class="p">&gt;</span> .\build\Debug\pyis_torch_test.exe
+Weather intent : 1
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="onnxruntime.html" class="btn btn-neutral float-right" title="ONNXRuntime Backend" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="cpython.html" class="btn btn-neutral float-left" title="CPython Backend 🐍" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Inference Team, STCA, Microsoft.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,307 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>LinearChainCRF &mdash; Python Inference Script 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Python Inference Script
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Model Authoring</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="a_list_of_operators.html">Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/a_list_of_tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model Deployment</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../backends/cpython.html">CPython Backend 🐍</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backends/libtorch.html">LibTorch Backend 🔥</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backends/onnxruntime.html">ONNXRuntime Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backends/native_cpp_library.html">Native C++ Library</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/why_we_build_pyis.html">Why We Build PyIS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/build_from_source.html">Build from Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/house_keeping.html">House Keeping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/build_libtorch.html">Build LibTorch for JIT</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Python Inference Script</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>LinearChainCRF</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/operators/linear_chain_crf.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="linearchaincrf">
+<h1>LinearChainCRF<a class="headerlink" href="#linearchaincrf" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="apis">
+<h2>APIs<a class="headerlink" href="#apis" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyis.python.ops.LinearChainCRF">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyis.python.ops.</span></span><span class="sig-name descname"><span class="pre">LinearChainCRF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ops.LinearChainCRF</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_file</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyis.python.ops.LinearChainCRF" title="Permalink to this definition">¶</a></dt>
+<dd><p>A linear chain conditional random field(CRF) implementation.</p>
+<p>Create a LinearChainCRF object given the model file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model_file</strong> (<em>str</em>) – The model file.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyis.python.ops.LinearChainCRF.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ops.LinearChainCRF</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">len</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyis.python.ops.LinearChainCRF.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a list of features triggered by the input sample, return the label for each token of the input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>len</strong> (<em>int</em>) – token number of the input.</p></li>
+<li><p><strong>features</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>float</em><em>]</em><em>]</em>) – List of features, each is represented by
+a tuple of (token index, feature id, feature value).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of labels.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyis.python.ops.LinearChainCRF.train">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_file</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_file</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'l1sgd'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">150</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyis.python.ops.LinearChainCRF.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train a crf model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_file</strong> (<em>str</em>) – Training data file.</p></li>
+<li><p><strong>model_file</strong> (<em>str</em>) – Target file for the generated model file.</p></li>
+<li><p><strong>alg</strong> (<em>str</em>) – The training algorithm.
+perceptron: <a class="reference external" href="https://people.cs.umass.edu/~brenocon/inlp2015/09-discseq-perc.pdf">Structured Perceptron</a>,
+l1sgd: <a class="reference external" href="https://dl.acm.org/doi/pdf/10.5555/1687878.1687946">Stochastic Gradient Descent Training for L1-regularized Log-linear Models</a></p></li>
+<li><p><strong>max_iter</strong> (<em>int</em>) – Maximun iterations.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Copyright (c) Microsoft Corporation. All rights reserved.</span>
+<span class="c1"># Licensed under the MIT license.</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pyis.python</span> <span class="kn">import</span> <span class="n">ops</span>
+<span class="kn">from</span> <span class="nn">pyis.python.offline</span> <span class="kn">import</span> <span class="n">SequenceTagging</span> <span class="k">as</span> <span class="n">SeqTag</span>
+
+<span class="n">tmp_dir</span> <span class="o">=</span> <span class="s1">&#39;tmp/doc_linear_chain_crf/&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># training</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span><span class="n">ops</span><span class="o">.</span><span class="n">TextFeature</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">ops</span><span class="o">.</span><span class="n">TextFeature</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)],</span> <span class="c1"># hello tom</span>
+        <span class="p">[</span><span class="n">ops</span><span class="o">.</span><span class="n">TextFeature</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">ops</span><span class="o">.</span><span class="n">TextFeature</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)],</span> <span class="c1"># hello jerry</span>
+    <span class="p">]</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="c1"># O NAME</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="c1"># O NAME</span>
+    <span class="p">]</span>
+
+<span class="n">data_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">,</span> <span class="s1">&#39;lccrf.data.txt&#39;</span><span class="p">)</span>
+<span class="n">SeqTag</span><span class="o">.</span><span class="n">text_features_to_lccrf</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">data_file</span><span class="p">)</span>
+
+<span class="n">model_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">,</span> <span class="s1">&#39;lccrf.model.bin&#39;</span><span class="p">)</span>
+<span class="n">ops</span><span class="o">.</span><span class="n">LinearChainCRF</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="n">model_file</span><span class="p">,</span> <span class="s1">&#39;l1sgd&#39;</span><span class="p">)</span>
+<span class="n">lccrf</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">LinearChainCRF</span><span class="p">(</span><span class="n">model_file</span><span class="p">)</span>
+
+<span class="c1"># inference</span>
+<span class="n">values</span> <span class="o">=</span> <span class="n">lccrf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)])</span> <span class="c1"># hello tom</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Inference Team, STCA, Microsoft.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
