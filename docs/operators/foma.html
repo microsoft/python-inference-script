@@ -1,0 +1,315 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Foma(Finite State Compiler) &mdash; Python Inference Script 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Python Inference Script
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Model Authoring</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="a_list_of_operators.html">Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/a_list_of_tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model Deployment</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../backends/cpython.html">CPython Backend 🐍</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backends/libtorch.html">LibTorch Backend 🔥</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backends/onnxruntime.html">ONNXRuntime Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backends/native_cpp_library.html">Native C++ Library</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/why_we_build_pyis.html">Why We Build PyIS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/build_from_source.html">Build from Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/house_keeping.html">House Keeping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/build_libtorch.html">Build LibTorch for JIT</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Python Inference Script</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Foma(Finite State Compiler)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/operators/foma.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="foma-finite-state-compiler">
+<h1>Foma(Finite State Compiler)<a class="headerlink" href="#foma-finite-state-compiler" title="Permalink to this headline">¶</a></h1>
+<p>FomaFst is ported from <a class="reference external" href="https://fomafst.github.io/">https://fomafst.github.io/</a>, which is an open-sourced library for constructing finite-state automata and transducers for various uses
+including pattern matching, morphological analysis and word corrections.</p>
+<div class="section" id="apis">
+<h2>APIs<a class="headerlink" href="#apis" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyis.python.ops.FomaFst">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyis.python.ops.</span></span><span class="sig-name descname"><span class="pre">FomaFst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ops.FomaFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fst_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyis.python.ops.FomaFst" title="Permalink to this definition">¶</a></dt>
+<dd><p>FomaFst implements finite state transducer based on open-sourced library foma.</p>
+<p>Create a FomaFst instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fst_path</strong> (<em>str</em>) – path to the pre-built foma fst file</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyis.python.ops.FomaFst.apply_down">
+<span class="sig-name descname"><span class="pre">apply_down</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ops.FomaFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#pyis.python.ops.FomaFst.apply_down" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply input query to the pre-built foma fst</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>query</strong> (<em>str</em>) – input query to be applied to fst</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>transduced query (str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyis.python.ops.FomaFst.compile_from_file">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">compile_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyis.python.ops.FomaFst.compile_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile a foma script from a file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>infile</strong> (<em>str</em>) – foma script path to be compiled.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyis.python.ops.FomaFst.compile_from_str">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">compile_from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infile_str</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyis.python.ops.FomaFst.compile_from_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile a foma script from a string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>infile_str</strong> (<em>str</em>) – foma script to be compiled.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Copyright (c) Microsoft Corporation. All rights reserved.</span>
+<span class="c1"># Licensed under the MIT license.</span>
+
+<span class="kn">from</span> <span class="nn">pyis.python</span> <span class="kn">import</span> <span class="n">ops</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="c1"># build foma fst</span>
+<span class="c1"># build foma fst is via its script language, the language spec can be found:</span>
+<span class="n">fst_infile_src</span> <span class="o">=</span> \
+<span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">define Number [&quot;0&quot;|1|2|3|4|5|6|7|8|9] ;</span>
+<span class="sd">define Day [(1|2) Number | 3 &quot;0&quot; | 3 1];</span>
+<span class="sd">define Year Number (Number) (Number) (Number); # Could use Number^&lt;5</span>
+
+<span class="sd">define WeekDay [&quot;Monday&quot;|&quot;Tuesday&quot;|&quot;Wednesday&quot;|&quot;Thursday&quot;|&quot;Friday&quot;|&quot;Saturday&quot;|&quot;Sunday&quot;];</span>
+<span class="sd">define Month [&quot;January&quot;|&quot;February&quot;|&quot;March&quot;|&quot;April&quot;|&quot;May&quot;|&quot;June&quot;|&quot;July&quot;|&quot;August&quot;|&quot;September&quot;|&quot;October&quot;|&quot;November&quot;|&quot;December&quot;];</span>
+<span class="sd">define RegDates [WeekDay | Month &quot; &quot; Day (&quot;, &quot; Year)];</span>
+
+<span class="sd">define DateParser [RegDates @-&gt; &quot;&lt;DATE&gt;&quot; ... &quot;&lt;/DATE&gt;&quot;];</span>
+
+<span class="sd">regex DateParser;</span>
+<span class="sd">apply down April 14, 2010 – Nelson Mandela was honoured</span>
+<span class="sd">save stack temp.fst</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># you can also save the script into a file, and call `compile_from_file` instead</span>
+<span class="n">ops</span><span class="o">.</span><span class="n">FomaFst</span><span class="o">.</span><span class="n">compile_from_str</span><span class="p">(</span><span class="n">fst_infile_src</span><span class="p">)</span> 
+
+<span class="c1"># instantiate a FomaFst object by loading a compiled fst</span>
+<span class="n">fst</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">FomaFst</span><span class="p">(</span><span class="s2">&quot;temp.fst&quot;</span><span class="p">)</span> 
+
+<span class="c1"># use foma fst</span>
+<span class="c1"># apply_down(input_str) will apply the input_str to the fst on top of the stack</span>
+<span class="c1"># note: `regex DateParser` push the DateParser to the top of the stack</span>
+<span class="k">assert</span><span class="p">(</span><span class="n">fst</span><span class="o">.</span><span class="n">apply_down</span><span class="p">(</span><span class="s2">&quot;April 14, 2010 – Nelson Mandela was honoured&quot;</span><span class="p">)</span> <span class="o">==</span> \
+    <span class="s2">&quot;&lt;DATE&gt;April 14, 2010&lt;/DATE&gt; – Nelson Mandela was honoured&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Inference Team, STCA, Microsoft.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

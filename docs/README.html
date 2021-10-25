@@ -1,0 +1,311 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Python Inference Script(PyIS) &mdash; Python Inference Script 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Python Inference Script
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Model Authoring</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="operators/a_list_of_operators.html">Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/a_list_of_tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model Deployment</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="backends/cpython.html">CPython Backend 🐍</a></li>
+<li class="toctree-l1"><a class="reference internal" href="backends/libtorch.html">LibTorch Backend 🔥</a></li>
+<li class="toctree-l1"><a class="reference internal" href="backends/onnxruntime.html">ONNXRuntime Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="backends/native_cpp_library.html">Native C++ Library</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="dev/why_we_build_pyis.html">Why We Build PyIS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/build_from_source.html">Build from Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/house_keeping.html">House Keeping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/build_libtorch.html">Build LibTorch for JIT</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Python Inference Script</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Python Inference Script(PyIS)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/README.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="python-inference-script-pyis">
+<h1>Python Inference Script(PyIS)<a class="headerlink" href="#python-inference-script-pyis" title="Permalink to this headline">¶</a></h1>
+<p>Python Inference Script is a Python package that enables developers to author machine learning workflows in Python and deploy without Python.</p>
+<p>Various tools could be available for fast experimentation, for example sklearn, CNTK, Tensorflow, PyTorch and etc. However, when it comes to deployement, problems will emerge:</p>
+<ul class="simple">
+<li><p>Is it optimized, fast or memory efficient?</p></li>
+<li><p>Is the runtime or model compact enough for edge devices?</p></li>
+<li><p>Is it easy to learn and cross-platform?</p></li>
+</ul>
+<p>To solve those puzzles, the Python Inference Script(PyIS) is introduced.</p>
+<div class="figure align-left">
+<a class="reference internal image-reference" href="_images/pyis_overview.png"><img alt="Python Inference Script" src="_images/pyis_overview.png" style="width: 556.8px; height: 377.4px;" /></a>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p><strong>Build and Install from Source</strong></p>
+<p><a class="reference external" href="https://microsoft.github.io/python-inference-script/dev/build_from_source.html">Instruction</a></p>
+<p><strong>Install from Pip</strong> <em>(Coming Soon)</em></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m pip install pyis-python --upgrade
+</pre></div>
+</div>
+</div>
+<div class="section" id="verification">
+<h2>Verification<a class="headerlink" href="#verification" title="Permalink to this headline">¶</a></h2>
+<p><strong>Python Backend</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Python backend</span>
+<span class="kn">from</span> <span class="nn">pyis.python</span> <span class="kn">import</span> <span class="n">ops</span>
+<span class="kn">from</span> <span class="nn">pyis.python.model_context</span> <span class="kn">import</span> <span class="n">save</span><span class="p">,</span> <span class="n">load</span>
+
+<span class="c1"># create trie op</span>
+<span class="n">trie</span><span class="p">:</span> <span class="n">ops</span><span class="o">.</span><span class="n">CedarTrie</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">CedarTrie</span><span class="p">()</span>
+<span class="n">trie</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s1">&#39;what time is it in Seattle?&#39;</span><span class="p">)</span>
+<span class="n">trie</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s1">&#39;what is the time in US?&#39;</span><span class="p">)</span>
+
+<span class="c1"># run trie match</span>
+<span class="n">query</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;what is the time in US?&#39;</span>
+<span class="n">is_matched</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">trie</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+<span class="c1"># serialize</span>
+<span class="n">save</span><span class="p">(</span><span class="n">trie</span><span class="p">,</span> <span class="s1">&#39;tmp/trie.pkl&#39;</span><span class="p">)</span>
+
+<span class="c1"># load and run</span>
+<span class="n">trie</span><span class="p">:</span> <span class="n">ops</span><span class="o">.</span><span class="n">CedarTrie</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s1">&#39;tmp/trie.pkl&#39;</span><span class="p">)</span>
+<span class="n">is_matched</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">trie</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>LibTorch Backend</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># LibTorch backend</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">pyis.torch</span> <span class="kn">import</span> <span class="n">ops</span>
+<span class="kn">from</span> <span class="nn">pyis.torch.model_context</span> <span class="kn">import</span> <span class="n">save</span><span class="p">,</span> <span class="n">load</span>
+
+<span class="c1"># define torch model</span>
+<span class="k">class</span> <span class="nc">TrieMatcher</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trie</span><span class="p">:</span> <span class="n">ops</span><span class="o">.</span><span class="n">CedarTrie</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">CedarTrie</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trie</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s1">&#39;what time is it in Seattle?&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trie</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s1">&#39;what is the time in US?&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trie</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+<span class="c1"># create torch model</span>
+<span class="n">model</span><span class="p">:</span> <span class="n">TrieMatcher</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">script</span><span class="p">(</span><span class="n">TrieMatcher</span><span class="p">())</span>
+
+<span class="c1"># run trie match</span>
+<span class="n">query</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;what is the time in US?&#39;</span>
+<span class="n">is_matched</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+<span class="c1"># serialize</span>
+<span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;tmp/trie.pt&#39;</span><span class="p">)</span>
+
+<span class="c1"># load and run</span>
+<span class="n">model</span><span class="p">:</span> <span class="n">TrieMatcher</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s1">&#39;tmp/trie.pt&#39;</span><span class="p">)</span>
+<span class="n">is_matched</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>ONNX Backend</strong></p>
+<p><em>Coming Soon…</em></p>
+</div>
+<div class="section" id="build-the-docs">
+<h2>Build the Docs<a class="headerlink" href="#build-the-docs" title="Permalink to this headline">¶</a></h2>
+<p>Run the following commands and open <code class="docutils literal notranslate"><span class="pre">docs/_build/html/index.html</span></code> in browser.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install sphinx myst-parser sphinx-rtd-theme sphinxemoji
+<span class="nb">cd</span> docs/
+
+make html         <span class="c1"># for linux</span>
+.<span class="se">\m</span>ake.bat html   <span class="c1"># for windows</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Inference Team, STCA, Microsoft.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

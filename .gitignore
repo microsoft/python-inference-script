@@ -197,9 +197,6 @@ libtorch_install/
 
 # sphinx
 _build/
-_static/
-_templates/
-docs/
 
 # gdb output
 .gdb_*

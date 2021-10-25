@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Build from Source &mdash; Python Inference Script 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="House Keeping" href="house_keeping.html" />
+    <link rel="prev" title="Why We Build PyIS" href="why_we_build_pyis.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Python Inference Script
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Model Authoring</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../operators/a_list_of_operators.html">Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/a_list_of_tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model Deployment</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../backends/cpython.html">CPython Backend 🐍</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backends/libtorch.html">LibTorch Backend 🔥</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backends/onnxruntime.html">ONNXRuntime Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backends/native_cpp_library.html">Native C++ Library</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="why_we_build_pyis.html">Why We Build PyIS</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Build from Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="house_keeping.html">House Keeping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="build_libtorch.html">Build LibTorch for JIT</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Python Inference Script</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Build from Source</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/dev/build_from_source.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="build-from-source">
+<h1>Build from Source<a class="headerlink" href="#build-from-source" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="linux">
+<h2>Linux<a class="headerlink" href="#linux" title="Permalink to this headline">¶</a></h2>
+<p><strong>Prerequisites</strong></p>
+<ul class="simple">
+<li><p>CMake &gt;= 3.14</p></li>
+<li><p>Python &gt;= 3.6</p></li>
+<li><p><a class="reference external" href="https://pytorch.org/get-started/locally/">PyTorch==1.8.1</a> (Stable+Linux+Pip+Python+CPU)</p></li>
+</ul>
+<p>Keep the root folder of the git repository as your current working directory. Run the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m pip install --upgrade pip setuptools <span class="nv">onnx</span><span class="o">==</span><span class="m">1</span>.9.0 onnxruntime
+
+<span class="c1"># build</span>
+cmake -S . -B build
+cmake --build build -j4
+
+<span class="c1"># run all unittests</span>
+<span class="nb">export</span> <span class="nv">CTEST_OUTPUT_ON_FAILURE</span><span class="o">=</span>TRUE
+cmake --build build --target <span class="nb">test</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="windows">
+<h2>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h2>
+<p><strong>Prerequisites</strong></p>
+<ul class="simple">
+<li><p>Visual Studio 2019</p></li>
+<li><p>CMake &gt;= 3.14</p></li>
+<li><p>Python &gt;= 3.6</p></li>
+<li><p><a class="reference external" href="https://pytorch.org/get-started/locally/">PyTorch==1.8.1</a> (Stable+Windows+Pip+Python+CPU)</p></li>
+</ul>
+<p>Keep the root folder of the git repository as your current working directory. Run the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m pip install --upgrade pip setuptools <span class="nv">onnx</span><span class="o">==</span><span class="m">1</span>.9.0 onnxruntime mymy
+
+<span class="c1"># Generate VS Project Files</span>
+<span class="c1"># use system defaults, works well for most cases</span>
+cmake -S . -B build -A x64
+<span class="c1"># use VS 2019 explicitly</span>
+<span class="c1"># cmake -S . -B build -G &quot;Visual Studio 16 2019&quot; -A x64</span>
+<span class="c1"># (legacy) use VS 2017 explicitly</span>
+<span class="c1"># cmake -S . -B build -G &quot;Visual Studio 15 2017 Win64&quot; -A x64</span>
+
+<span class="c1"># Either you open the solution file ``pyis.sln`` in the ``build/`` folder with Visual Studio,</span>
+<span class="c1"># or you build with CMake commands:</span>
+cmake --build build --config RelWithDebInfo -- /m:4
+
+<span class="c1"># run all unittests</span>
+<span class="c1"># check stdout/stderr at `build/Testing/Temporary/LastTest.log`</span>
+cmake --build build --config RelWithDebInfo --target RUN_TESTS
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Debug build is the default CMake build setting. Since most third-party libraries only have Release build provided, e.g., libtorch and onnxruntime, RelWithDebInfo will be recommended during development if you want to debug the code step-by-step.</p>
+</div>
+</div>
+<div class="section" id="install-pip-package-in-develop-mode">
+<h2>Install Pip Package in Develop Mode<a class="headerlink" href="#install-pip-package-in-develop-mode" title="Permalink to this headline">¶</a></h2>
+<p>To test and debug the wheel package in an agile way, it is recommended to install pyis source tree as the package locally. Any changes made will take effect immediately as you make.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> py/
+python -m pip install --upgrade pip setuptools
+python -m pip install -e .
+python -m unittest discover tests/
+
+<span class="c1"># uninstall if you don&#39;t need it any more</span>
+python -m pip uninstall -e .
+</pre></div>
+</div>
+<p>In case you see any package import issue, you may want to take a look at files on disk related to installed packages. Here is a shortcut for where you can find them:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># find your site-packages path by</span>
+python -m site
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="house_keeping.html" class="btn btn-neutral float-right" title="House Keeping" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="why_we_build_pyis.html" class="btn btn-neutral float-left" title="Why We Build PyIS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Inference Team, STCA, Microsoft.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
