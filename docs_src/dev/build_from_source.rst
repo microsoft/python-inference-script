@@ -9,7 +9,7 @@ Linux
 
 * CMake >= 3.14
 * Python >= 3.6
-* `PyTorch==1.8.1 <https://pytorch.org/get-started/locally/>`__ (Stable+Linux+Pip+Python+CPU)
+* PyTorch==1.9.0
 
 Keep the root folder of the git repository as your current working directory. Run the following commands:
 
@@ -33,7 +33,7 @@ Windows
 * Visual Studio 2019
 * CMake >= 3.14
 * Python >= 3.6
-* `PyTorch==1.8.1 <https://pytorch.org/get-started/locally/>`__ (Stable+Windows+Pip+Python+CPU)
+* PyTorch==1.9.0
 
 Keep the root folder of the git repository as your current working directory. Run the following commands:
 
