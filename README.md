@@ -10,32 +10,82 @@ Various tools could be available for fast experimentation, for example sklearn, 
 
 To solve those puzzles, the Python Inference Script(PyIS) is introduced.
 
+![Image](docs_src/images/pyis_overview.png)
+
 ## Installation
+
+### Build and install from source
+
+[Instruction](https://microsoft.github.io/python-inference-script/dev/build_from_source.html)
+
+### *from pip source (Coming Soon)*
 
 ```bash
 python -m pip install pyis-python --upgrade 
 ```
 
+
+
 ## Verification
-
+### Python Backend
 ```python
-    import torch
-    import pyis
-    from typing import List
+    # Python backend
+    from pyis.python import ops
+    from pyis.python.model_context import save, load
 
-    class Tokenizer(torch.jit.ScriptModule):
-        def forward(self, q: str) -> List[int]:
-            tokens = pyis.text.BertTokenizer(q)
-            return tokens
+    # create trie op
+    trie = ops.CedarTrie()
+    trie.insert('what time is it in Seattle?')
+    trie.insert('what is the time in US?')
 
-    m = Tokenizer()
+    # run trie match
+    query = 'what is the time in US?'
+    is_matched = trie.contains(query)
 
-    # save for onnxruntime
-    pyis.onnx.save(m, 'model.onnx')
+    # serialize
+    save(trie, 'tmp/trie.pkl')
 
-    # save for libtorch
-    pyis.torch.save(m, 'model.pt')
+    # load and run
+    trie = load('tmp/trie.pkl')
+    is_matched = trie.contains(query)
 ```
+
+### LibTorch Backend
+```python
+    # LibTorch backend
+    import torch
+    from pyis.torch import ops
+    from pyis.torch.model_context import save, load
+
+    # define torch model
+    class TrieMatcher(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.trie = ops.CedarTrie()
+            self.trie.insert('what time is it in Seattle?')
+            self.trie.insert('what is the time in US?')
+
+        def forward(self, query: str) -> bool:
+            return self.trie.contains(query)
+
+    # create torch model
+    model = torch.jit.script(TrieMatcher())
+
+    # run trie match
+    query = 'what is the time in US?'
+    is_matched = model.forward(query)
+
+    # serialize
+    save(model, 'tmp/trie.pt')
+
+    # load and run
+    model = load('tmp/trie.pt')
+    is_matched = model.forward(query)
+```
+
+### ONNXRuntime Backend
+*COMING SOON...*
+
 
 ## Build the Docs
 

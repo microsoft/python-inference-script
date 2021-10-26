@@ -199,6 +199,7 @@ libtorch_install/
 _build/
 _static/
 _templates/
+docs/
 
 # gdb output
 .gdb_*
