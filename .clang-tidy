@@ -26,6 +26,7 @@ Checks: >
   -readability-function-cognitive-complexity,
   -bugprone-narrowing-conversions
 
+
 WarningsAsErrors: "*"
 HeaderFilterRegex: '(pyis\/bindings|pyis\/share|pyis\/ops|tests)\/.*'
 AnalyzeTemporaryDtors: false
