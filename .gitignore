@@ -196,7 +196,7 @@ libtorch_build/
 libtorch_install/
 
 # sphinx
-_build/
+_build/ 
 
 # gdb output
 .gdb_*
