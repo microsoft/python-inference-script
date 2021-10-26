@@ -42,20 +42,20 @@ Verification
     from pyis.python.model_context import save, load
 
     # create trie op
-    trie: ops.CedarTrie = ops.CedarTrie()
+    trie = ops.CedarTrie()
     trie.insert('what time is it in Seattle?')
     trie.insert('what is the time in US?')
 
     # run trie match
-    query: str = 'what is the time in US?'
-    is_matched: bool = trie.contains(query)
+    query = 'what is the time in US?'
+    is_matched = trie.contains(query)
 
     # serialize
     save(trie, 'tmp/trie.pkl')
 
     # load and run
-    trie: ops.CedarTrie = load('tmp/trie.pkl')
-    is_matched: bool = trie.contains(query)
+    trie = load('tmp/trie.pkl')
+    is_matched = trie.contains(query)
 
 **LibTorch Backend**
 
@@ -70,7 +70,7 @@ Verification
     class TrieMatcher(torch.nn.Module):
         def __init__(self):
             super().__init__()
-            self.trie: ops.CedarTrie = ops.CedarTrie()
+            self.trie = ops.CedarTrie()
             self.trie.insert('what time is it in Seattle?')
             self.trie.insert('what is the time in US?')
 
@@ -78,20 +78,20 @@ Verification
             return self.trie.contains(query)
 
     # create torch model
-    model: TrieMatcher = torch.jit.script(TrieMatcher())
+    model = torch.jit.script(TrieMatcher())
 
     # run trie match
-    query: str = 'what is the time in US?'
-    is_matched: bool = model.forward(query)
+    query = 'what is the time in US?'
+    is_matched = model.forward(query)
 
     # serialize
     save(model, 'tmp/trie.pt')
 
     # load and run
-    model: TrieMatcher = load('tmp/trie.pt')
-    is_matched: bool = model.forward(query)
+    model = load('tmp/trie.pt')
+    is_matched = model.forward(query)
 
-**ONNX Backend**
+**ONNXRuntime Backend**
 
 *Coming Soon...*
 

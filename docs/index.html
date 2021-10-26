@@ -201,20 +201,20 @@
 <span class="kn">from</span> <span class="nn">pyis.python.model_context</span> <span class="kn">import</span> <span class="n">save</span><span class="p">,</span> <span class="n">load</span>
 
 <span class="c1"># create trie op</span>
-<span class="n">trie</span><span class="p">:</span> <span class="n">ops</span><span class="o">.</span><span class="n">CedarTrie</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">CedarTrie</span><span class="p">()</span>
+<span class="n">trie</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">CedarTrie</span><span class="p">()</span>
 <span class="n">trie</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s1">&#39;what time is it in Seattle?&#39;</span><span class="p">)</span>
 <span class="n">trie</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s1">&#39;what is the time in US?&#39;</span><span class="p">)</span>
 
 <span class="c1"># run trie match</span>
-<span class="n">query</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;what is the time in US?&#39;</span>
-<span class="n">is_matched</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">trie</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;what is the time in US?&#39;</span>
+<span class="n">is_matched</span> <span class="o">=</span> <span class="n">trie</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 
 <span class="c1"># serialize</span>
 <span class="n">save</span><span class="p">(</span><span class="n">trie</span><span class="p">,</span> <span class="s1">&#39;tmp/trie.pkl&#39;</span><span class="p">)</span>
 
 <span class="c1"># load and run</span>
-<span class="n">trie</span><span class="p">:</span> <span class="n">ops</span><span class="o">.</span><span class="n">CedarTrie</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s1">&#39;tmp/trie.pkl&#39;</span><span class="p">)</span>
-<span class="n">is_matched</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">trie</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+<span class="n">trie</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s1">&#39;tmp/trie.pkl&#39;</span><span class="p">)</span>
+<span class="n">is_matched</span> <span class="o">=</span> <span class="n">trie</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>LibTorch Backend</strong></p>
@@ -227,7 +227,7 @@
 <span class="k">class</span> <span class="nc">TrieMatcher</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">trie</span><span class="p">:</span> <span class="n">ops</span><span class="o">.</span><span class="n">CedarTrie</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">CedarTrie</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trie</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">CedarTrie</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trie</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s1">&#39;what time is it in Seattle?&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trie</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s1">&#39;what is the time in US?&#39;</span><span class="p">)</span>
 
@@ -235,21 +235,21 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trie</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 
 <span class="c1"># create torch model</span>
-<span class="n">model</span><span class="p">:</span> <span class="n">TrieMatcher</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">script</span><span class="p">(</span><span class="n">TrieMatcher</span><span class="p">())</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">script</span><span class="p">(</span><span class="n">TrieMatcher</span><span class="p">())</span>
 
 <span class="c1"># run trie match</span>
-<span class="n">query</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;what is the time in US?&#39;</span>
-<span class="n">is_matched</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;what is the time in US?&#39;</span>
+<span class="n">is_matched</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 
 <span class="c1"># serialize</span>
 <span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;tmp/trie.pt&#39;</span><span class="p">)</span>
 
 <span class="c1"># load and run</span>
-<span class="n">model</span><span class="p">:</span> <span class="n">TrieMatcher</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s1">&#39;tmp/trie.pt&#39;</span><span class="p">)</span>
-<span class="n">is_matched</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s1">&#39;tmp/trie.pt&#39;</span><span class="p">)</span>
+<span class="n">is_matched</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>ONNX Backend</strong></p>
+<p><strong>ONNXRuntime Backend</strong></p>
 <p><em>Coming Soon…</em></p>
 </div>
 <div class="section" id="build-the-docs">
