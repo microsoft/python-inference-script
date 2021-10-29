@@ -119,7 +119,7 @@ char32_t StripAccent(char32_t c) {
     return tr[c - 192];
 }
 
-void findAndReplaceAll(std::string& data, const std::string& str_to_search, const std::string& str_to_replace) {
+void FindAndReplaceAll(std::string& data, const std::string& str_to_search, const std::string& str_to_replace) {
     size_t pos = data.find(str_to_search);
     while (pos != std::string::npos) {
         data.replace(pos, str_to_search.length(), str_to_replace);

@@ -49,16 +49,16 @@ class Tokenizer {
   protected:
     void LoadVocabFile();
     void clean_up_tokenization(std::string& str) {
-        findAndReplaceAll(str, " .", ".");
-        findAndReplaceAll(str, " ?", "?");
-        findAndReplaceAll(str, " !", "!");
-        findAndReplaceAll(str, " ,", ",");
-        findAndReplaceAll(str, " '", "'");
-        findAndReplaceAll(str, " n't", "n't");
-        findAndReplaceAll(str, " 'm", "'m");
-        findAndReplaceAll(str, " 's", "'s");
-        findAndReplaceAll(str, " 've", "'ve");
-        findAndReplaceAll(str, " 're", "'re");
+        FindAndReplaceAll(str, " .", ".");
+        FindAndReplaceAll(str, " ?", "?");
+        FindAndReplaceAll(str, " !", "!");
+        FindAndReplaceAll(str, " ,", ",");
+        FindAndReplaceAll(str, " '", "'");
+        FindAndReplaceAll(str, " n't", "n't");
+        FindAndReplaceAll(str, " 'm", "'m");
+        FindAndReplaceAll(str, " 's", "'s");
+        FindAndReplaceAll(str, " 've", "'ve");
+        FindAndReplaceAll(str, " 're", "'re");
     }
     std::string cls_token_;
     std::string sep_token_;
