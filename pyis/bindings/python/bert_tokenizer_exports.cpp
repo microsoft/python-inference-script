@@ -116,11 +116,14 @@ void init_bert_tokenizer(py::module& m) {
             Returns:
                     output list of tuple, each tuple contains (ids, type ids, attention mask)
             )pbdoc")
-        .def("decode", &BertTokenizer::Decode, py::arg("ids"), R"pbdoc(
+        .def("decode", &BertTokenizer::Decode, py::arg("ids"), py::arg("skip_special_tokens") = false,
+             py::arg("clean_up_tokenization_spaces") = true, R"pbdoc(
             Decode a list of token indices, turn them into a string.
 
             Args:
                     ids (List[int]): list of token indices
+                    skip_special_tokens (bool): should the decoder ignore special tokens. default to false.
+                    clean_up_tokenization_spaces (bool): should the output string be clean up to fit for English.
 
             Returns:
                     output the corresponding string to the list.

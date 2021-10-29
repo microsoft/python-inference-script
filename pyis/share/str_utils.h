@@ -53,4 +53,6 @@ bool IsAccent(char32_t c);
 
 char32_t StripAccent(char32_t c);
 
+void findAndReplaceAll(std::string& data, const std::string& toSearch, const std::string& replaceStr);
+
 }  // namespace pyis

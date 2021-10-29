@@ -108,10 +108,7 @@ std::vector<std::tuple<int64_t, int64_t, int64_t>> Tokenizer::EncodePlus(const s
 }
 
 std::vector<std::tuple<int64_t, int64_t, int64_t>> Tokenizer::EncodePlus(const std::string& str1,
-
-                                                                         const std::string& str2,
-
-                                                                         int64_t max_length,
+                                                                         const std::string& str2, int64_t max_length,
                                                                          const std::string& truncation_strategy) {
     auto code1 = Encode(str1);
     auto code2 = Encode(str2);
@@ -127,15 +124,21 @@ std::vector<std::tuple<int64_t, int64_t, int64_t>> Tokenizer::EncodePlus(const s
     return result;
 }
 
-std::string Tokenizer::Decode(const std::vector<int64_t>& code) {
-    std::string result;
+std::string Tokenizer::Decode(const std::vector<int64_t>& code, bool skip_special_tokens,
+                              bool clean_up_tokenization_spaces) {
+    std::set<std::string> special_tokens({unk_token_, pad_token_, cls_token_, mask_token_, sep_token_});
+    std::vector<std::string> sub_texts;
     for (const auto& id : code) {
-        result += ConvertIdToToken(id) + " ";
+        std::string current_token = ConvertIdToToken(id);
+        if (!skip_special_tokens || !special_tokens.count(current_token)) {
+            sub_texts.emplace_back(current_token);
+        }
     }
-    if (!result.empty()) {
-        result.pop_back();
+    std::string text = join_str(sub_texts, " ");
+    if (clean_up_tokenization_spaces) {
+        clean_up_tokenization(text);
     }
-    return result;
+    return text;
 }
 
 std::string Tokenizer::ConvertIdToToken(int64_t id) {
