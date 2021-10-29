@@ -93,14 +93,13 @@ void init_ort_session(py::module& m) {
 
             )pbdoc")
         .def_static("initialize_ort", &OrtSession::InitializeOrt, py::arg("ort_dll_file") = "",
-            R"pbdoc(
+                    R"pbdoc(
                 Initialize ORT (ONNX Runtime) dynamically
                 
                 Args:
                     ort_dll_file (str): the filename of ort dll file. Make sure the specified ort dll with all its dependencies are in the search path
 
-            )pbdoc"
-        )
+            )pbdoc")
         .def(
             "run",
             [](OrtSession& self, std::vector<py::array>& inputs) -> std::vector<py::array> {

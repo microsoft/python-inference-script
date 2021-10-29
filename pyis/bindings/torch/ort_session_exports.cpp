@@ -43,8 +43,7 @@ class OrtSessionAdaptor : public ::torch::CustomClassHolder {
         return ret;
     }
 
-    static void InitializeOrt(const std::string& ort_dll_file) { OrtSession::InitializeOrt(ort_dll_file);
-    }
+    static void InitializeOrt(const std::string& ort_dll_file) { OrtSession::InitializeOrt(ort_dll_file); }
 
     std::string Serialize(ModelStorage& m) { return obj_->Serialize(m); }
 
