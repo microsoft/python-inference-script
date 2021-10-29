@@ -76,11 +76,9 @@ void init_ort_session(py::module& m) {
             Augmented OrtSession ONNX Runtime Session
 
         )pbdoc")
-        .def(py::init<std::string&, std::vector<std::string>&, std::vector<std::string>&, int, int, bool, int,
-                      std::string&>(),
+        .def(py::init<std::string&, std::vector<std::string>&, std::vector<std::string>&, int, int, bool, int>(),
              py::arg("model_path"), py::arg("input_names"), py::arg("output_names"), py::arg("inter_op_thread_num") = 1,
              py::arg("intra_op_thread_num") = 0, py::arg("dynamic_batching") = false, py::arg("batch_size") = 1,
-             py::arg("ort_dll_file") = "",
              R"pbdoc(
                 Create an ORT(ONNX Runtime) Session.
 
@@ -91,8 +89,15 @@ void init_ort_session(py::module& m) {
                     inter_op_thread_num (int): inter-op thread num, default to 1,
                     intra_op_thread_num (int): intra-op thread num, default to 0, use all cores
                     dynamic_batching (bool): use dynamic batching or not,
-                    batch_size (int): dynamic batch size,
-                    ort_dll_file (string): optional, custom ORT dll file path
+                    batch_size (int): dynamic batch size
+
+            )pbdoc")
+        .def_static("initialize_ort", &OrtSession::InitializeOrt, py::arg("ort_dll_file") = "",
+                    R"pbdoc(
+                Initialize ORT (ONNX Runtime) dynamically
+                
+                Args:
+                    ort_dll_file (str): the filename of ort dll file. Make sure the specified ort dll with all its dependencies are in the search path
 
             )pbdoc")
         .def(

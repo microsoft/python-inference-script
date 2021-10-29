@@ -22,8 +22,7 @@ namespace ops {
 class OrtSession : public CachedObject<OrtSession> {
   public:
     OrtSession(std::string model_file, std::vector<std::string> input_names, std::vector<std::string> output_names,
-               int inter_op_thread_num, int intra_op_thread_num, bool dynamic_batching = false, int batch_size = 1,
-               const std::string& ort_dll_file = "");
+               int inter_op_thread_num, int intra_op_thread_num, bool dynamic_batching = false, int batch_size = 1);
 
     // For deserialization
     OrtSession() = default;
@@ -33,10 +32,17 @@ class OrtSession : public CachedObject<OrtSession> {
 
     std::vector<std::shared_ptr<Ort::Value>> Run(const std::vector<std::shared_ptr<Ort::Value>>& inputs);
 
+    /// <summary>
+    /// Initialize onnxruntime dynamically by loading ort dll
+    /// </summary>
+    /// <param name="ort_dll_file">ort dll file name</param>
+    static void InitializeOrt(const std::string& ort_dll_file);
+
   private:
     void BuildSession();
 
-    static std::once_flag ort_initialization_flag;
+    static std::mutex ort_initialization_mutex;
+    static bool ort_initialized;
     std::shared_ptr<Ort::SessionOptions> session_options_;
     std::shared_ptr<Ort::Session> session_;
 
