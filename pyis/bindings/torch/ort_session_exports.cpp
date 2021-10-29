@@ -21,10 +21,9 @@ class OrtSessionAdaptor : public ::torch::CustomClassHolder {
   public:
     OrtSessionAdaptor(const std::string& model_path, const std::vector<std::string>& input_names,
                       const std::vector<std::string>& output_names, int64_t inter_op_thread_num,
-                      int64_t intra_op_thread_num, bool dynamic_batching, int64_t batch_size,
-                      const std::string& ort_dll_file) {
+                      int64_t intra_op_thread_num, bool dynamic_batching, int64_t batch_size) {
         obj_ = std::make_shared<OrtSession>(model_path, input_names, output_names, inter_op_thread_num,
-                                            intra_op_thread_num, dynamic_batching, batch_size, ort_dll_file);
+                                            intra_op_thread_num, dynamic_batching, batch_size);
     }
 
     explicit OrtSessionAdaptor(std::shared_ptr<OrtSession>& obj) { obj_ = obj; }
@@ -44,6 +43,9 @@ class OrtSessionAdaptor : public ::torch::CustomClassHolder {
         return ret;
     }
 
+    static void InitializeOrt(const std::string& ort_dll_file) { OrtSession::InitializeOrt(ort_dll_file);
+    }
+
     std::string Serialize(ModelStorage& m) { return obj_->Serialize(m); }
 
   private:
@@ -53,12 +55,13 @@ class OrtSessionAdaptor : public ::torch::CustomClassHolder {
 void init_ort_session(::torch::Library& m) {
     m.class_<OrtSessionAdaptor>("OrtSession")
         .def(::torch::init<const std::string&, const std::vector<std::string>&, const std::vector<std::string>&,
-                           int64_t, int64_t, bool, int64_t, const std::string&>(),
+                           int64_t, int64_t, bool, int64_t>(),
              "",
              {torch::arg("model_path"), torch::arg("input_names"), torch::arg("output_names"),
               torch::arg("inter_op_thread_num") = 1, torch::arg("intra_op_thread_num") = 0,
-              torch::arg("dynamic_batching") = false, torch::arg("batch_size") = 1, torch::arg("ort_dll_file") = ""})
+              torch::arg("dynamic_batching") = false, torch::arg("batch_size") = 1})
         .def("run", &OrtSessionAdaptor::run, "", {torch::arg("inputs")})
+        .def_static("initialize_ort", &OrtSessionAdaptor::InitializeOrt, "")
         .def_pickle(
             [](const c10::intrusive_ptr<OrtSessionAdaptor>& self) -> std::string {
                 std::string state = self->Serialize(ModelContext::GetActive()->Storage());

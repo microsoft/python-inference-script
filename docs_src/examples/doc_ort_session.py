@@ -11,6 +11,8 @@ output_names: List[str] = ['class_label']
 
 inputs: List[np.ndarray] = [np.array([3, 6, 8], dtype=np.int64)]
 
+ops.OrtSession.initialize_ort()
+
 # create ort session object
 ort_session: ops.OrtSession = ops.OrtSession(
     model_path,

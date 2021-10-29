@@ -15,11 +15,11 @@ class TestOrtSessionWithCustomOrtDll(unittest.TestCase):
         # initialize model
         self.model_path = os.path.join(os.path.dirname(__file__), 'data', 'a_plus_b.onnx')
         custom_dll_path = str(Path(__file__).parent / 'customdll' / 'libonnxruntime.so.1.8.0')
+        ops.OrtSession.initialize_ort(custom_dll_path)
         self.ort_session: ops.OrtSession = ops.OrtSession(
-            model_file = self.model_file,
+            model_path = self.model_path,
             input_names = ['x', 'y'],
-            output_names = ['r1', 'r2'],
-            ort_dll_file = custom_dll_path
+            output_names = ['r1', 'r2']
         )
 
     def test(self):
@@ -31,6 +31,7 @@ class TestOrtSessionWithCustomOrtDll(unittest.TestCase):
 
 class TestOrtSessionSimple(unittest.TestCase):
     def setUp(self) -> None:
+        ops.OrtSession.initialize_ort()
         # initialize model
         self.model_path = os.path.join(os.path.dirname(__file__), 'data', 'a_plus_b.onnx')
         self.ort_session: ops.OrtSession = ops.OrtSession(

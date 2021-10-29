@@ -13,11 +13,12 @@
 namespace pyis {
 namespace ops {
 
-std::once_flag OrtSession::ort_initialization_flag;
+std::mutex OrtSession::ort_initialization_mutex;
+bool OrtSession::ort_initialized = false;
 
 OrtSession::OrtSession(std::string model_file, std::vector<std::string> input_names,
                        std::vector<std::string> output_names, int inter_op_thread_num, int intra_op_thread_num,
-                       bool dynamic_batching, int batch_size, const std::string& ort_dll_file)
+                       bool dynamic_batching, int batch_size)
     : src_model_file_(std::move(model_file)),
       dynamic_batching_(dynamic_batching),
       batch_size_(batch_size),
@@ -26,7 +27,6 @@ OrtSession::OrtSession(std::string model_file, std::vector<std::string> input_na
       input_names_str_repr_(std::move(input_names)),
       output_names_str_repr_(std::move(output_names)) {
     src_model_storage_ = std::make_shared<ModelStorageLocal>();
-    std::call_once(ort_initialization_flag, [&ort_dll_file]() { OrtGlobals::Initialize(ort_dll_file); });
     BuildSession();
 }
 
@@ -117,6 +117,15 @@ void OrtSession::BuildSession() {
     if (dynamic_batching_) {
         this->batch_mgr_ = std::make_unique<DynamicBatchManager>(batch_size_, session_, input_names_, output_names_);
     }
+}
+
+void OrtSession::InitializeOrt(const std::string& ort_dll_file) {
+    std::lock_guard<std::mutex> ort_initialization_lock(ort_initialization_mutex);
+    if (ort_initialized) {
+        PYIS_THROW("Ort could only initialized once!");
+    }
+    OrtGlobals::Initialize(ort_dll_file);
+    ort_initialized = true;
 }
 
 }  // namespace ops
