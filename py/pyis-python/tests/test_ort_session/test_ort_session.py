@@ -8,29 +8,31 @@ import numpy as np
 from pyis.python import ops 
 from pyis.python import save, load
 
-@unittest.skip("local dependencies and already verified")
-class TestOrtSessionWithCustomOrtDll(unittest.TestCase):
-    def setUp(self) -> None:
-        os.makedirs('tmp', exist_ok=True)
-        # initialize model
-        self.model_path = os.path.join(os.path.dirname(__file__), 'data', 'a_plus_b.onnx')
-        custom_dll_path = str(Path(__file__).parent / 'customdll' / 'libonnxruntime.so.1.8.0')
-        ops.OrtSession.initialize_ort(custom_dll_path)
-        self.ort_session: ops.OrtSession = ops.OrtSession(
-            model_path = self.model_path,
-            input_names = ['x', 'y'],
-            output_names = ['r1', 'r2']
-        )
+# @unittest.skip("local dependencies and already verified")
+# class TestOrtSessionWithCustomOrtDll(unittest.TestCase):
+#     @classmethod
+#     def setUpClass(self) -> None:
+#         os.makedirs('tmp', exist_ok=True)
+#         # initialize model
+#         self.model_path = os.path.join(os.path.dirname(__file__), 'data', 'a_plus_b.onnx')
+#         custom_dll_path = str(Path(__file__).parent / 'customdll' / 'libonnxruntime.so.1.8.0')
+#         ops.OrtSession.initialize_ort(custom_dll_path)
+#         self.ort_session: ops.OrtSession = ops.OrtSession(
+#             model_path = self.model_path,
+#             input_names = ['x', 'y'],
+#             output_names = ['r1', 'r2']
+#         )
 
-    def test(self):
-        i1 = np.array([1], dtype=np.int64)
-        i2 = np.array([2], dtype=np.int64)
-        o1, o2 = self.ort_session.run([i1, i2])
-        x = o1.tolist()
-        y = o2.tolist()
+#     def test(self):
+#         i1 = np.array([1], dtype=np.int64)
+#         i2 = np.array([2], dtype=np.int64)
+#         o1, o2 = self.ort_session.run([i1, i2])
+#         x = o1.tolist()
+#         y = o2.tolist()
 
 class TestOrtSessionSimple(unittest.TestCase):
-    def setUp(self) -> None:
+    @classmethod
+    def setUpClass(self) -> None:
         ops.OrtSession.initialize_ort()
         # initialize model
         self.model_path = os.path.join(os.path.dirname(__file__), 'data', 'a_plus_b.onnx')
