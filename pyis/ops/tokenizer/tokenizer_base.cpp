@@ -130,7 +130,7 @@ std::string Tokenizer::Decode(const std::vector<int64_t>& code, bool skip_specia
     std::vector<std::string> sub_texts;
     for (const auto& id : code) {
         std::string current_token = ConvertIdToToken(id);
-        if (!skip_special_tokens || !special_tokens.count(current_token)) {
+        if (!skip_special_tokens || special_tokens.count(current_token) == 0U) {
             sub_texts.emplace_back(current_token);
         }
     }

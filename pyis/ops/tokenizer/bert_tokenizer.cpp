@@ -95,7 +95,7 @@ std::string BertTokenizer::Decode(const std::vector<int64_t>& code, bool skip_sp
     std::string result;
     for (const auto& id : code) {
         std::string token = ConvertIdToToken(id);
-        if (!skip_special_tokens || !special_tokens.count(token)) {
+        if (!skip_special_tokens || special_tokens.count(token) == 0U) {
             if (!result.empty() && token.length() > suffix_indicator_.length() &&
                 token.substr(0, suffix_indicator_.size()) == suffix_indicator_) {
                 token = token.substr(suffix_indicator_.length());
