@@ -136,7 +136,7 @@ std::string Tokenizer::Decode(const std::vector<int64_t>& code, bool skip_specia
     }
     std::string text = join_str(sub_texts, " ");
     if (clean_up_tokenization_spaces) {
-        clean_up_tokenization(text);
+        CleanUpTokenization(text);
     }
     return text;
 }
@@ -209,6 +209,19 @@ void Tokenizer::LoadVocabFile() {
         vocab_map_reverse_[index] = line;
         ++index;
     }
+}
+
+void Tokenizer::CleanUpTokenization(std::string& str) {
+    FindAndReplaceAll(str, " .", ".");
+    FindAndReplaceAll(str, " ?", "?");
+    FindAndReplaceAll(str, " !", "!");
+    FindAndReplaceAll(str, " ,", ",");
+    FindAndReplaceAll(str, " ' ", "'");
+    FindAndReplaceAll(str, " n't", "n't");
+    FindAndReplaceAll(str, " 'm", "'m");
+    FindAndReplaceAll(str, " 's", "'s");
+    FindAndReplaceAll(str, " 've", "'ve");
+    FindAndReplaceAll(str, " 're", "'re");
 }
 
 }  // namespace ops

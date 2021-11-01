@@ -92,12 +92,11 @@ std::string BertTokenizer::Decode(const std::vector<int64_t>& code, bool skip_sp
                                   bool clean_up_tokenization_spaces) {
     std::vector<std::string> sub_texts;
     std::set<std::string> special_tokens({unk_token_, pad_token_, cls_token_, mask_token_, sep_token_});
-    std::string result;
     for (const auto& id : code) {
         std::string token = ConvertIdToToken(id);
         if (!skip_special_tokens || special_tokens.count(token) == 0U) {
-            if (!result.empty() && token.length() > suffix_indicator_.length() &&
-                token.substr(0, suffix_indicator_.size()) == suffix_indicator_) {
+            if (!sub_texts.empty() && token.length() > suffix_indicator_.length() &&
+                token.substr(0, suffix_indicator_.length()) == suffix_indicator_) {
                 token = token.substr(suffix_indicator_.length());
                 sub_texts.back().append(token);
             } else {
@@ -107,7 +106,7 @@ std::string BertTokenizer::Decode(const std::vector<int64_t>& code, bool skip_sp
     }
     std::string text = join_str(sub_texts, " ");
     if (clean_up_tokenization_spaces) {
-        clean_up_tokenization(text);
+        CleanUpTokenization(text);
     }
     return text;
 }

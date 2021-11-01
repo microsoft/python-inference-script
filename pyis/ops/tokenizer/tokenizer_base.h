@@ -48,18 +48,7 @@ class Tokenizer {
 
   protected:
     void LoadVocabFile();
-    void clean_up_tokenization(std::string& str) {
-        FindAndReplaceAll(str, " .", ".");
-        FindAndReplaceAll(str, " ?", "?");
-        FindAndReplaceAll(str, " !", "!");
-        FindAndReplaceAll(str, " ,", ",");
-        FindAndReplaceAll(str, " '", "'");
-        FindAndReplaceAll(str, " n't", "n't");
-        FindAndReplaceAll(str, " 'm", "'m");
-        FindAndReplaceAll(str, " 's", "'s");
-        FindAndReplaceAll(str, " 've", "'ve");
-        FindAndReplaceAll(str, " 're", "'re");
-    }
+    void CleanUpTokenization(std::string& str);
     std::string cls_token_;
     std::string sep_token_;
     std::string unk_token_;
