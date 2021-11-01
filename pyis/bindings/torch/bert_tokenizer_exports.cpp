@@ -51,7 +51,10 @@ struct BertTokenizerAdapter : public ::torch::CustomClassHolder {
         return obj_->EncodePlus(str1, str2, max_length, truncation_strategy);
     }
 
-    std::string decode(const std::vector<int64_t>& ids) { return obj_->Decode(ids); }
+    std::string decode(const std::vector<int64_t>& ids, bool skip_special_tokens = false,
+                       bool clean_up_tokenization_spaces = true) {
+        return obj_->Decode(ids, skip_special_tokens, clean_up_tokenization_spaces);
+    }
 
     std::string convert_id_to_token(int64_t id) { return obj_->ConvertIdToToken(id); }
 
@@ -84,7 +87,9 @@ void init_bert_tokenizer(::torch::Library& m) {
         .def("encode_plus2", &BertTokenizerAdapter::encode_plus2, "",
              {torch::arg("str1"), torch::arg("str2"), torch::arg("max_length") = static_cast<int64_t>(1e15),
               torch::arg("truncation_strategy") = "longest_first"})
-        .def("decode", &BertTokenizerAdapter::decode, "", {torch::arg("ids")})
+        .def("decode", &BertTokenizerAdapter::decode, "",
+             {torch::arg("ids"), torch::arg("skip_special_tokens") = false,
+              torch::arg("clean_up_tokenization_spaces") = true})
         .def("convert_id_to_token", &BertTokenizerAdapter::convert_id_to_token, "", {torch::arg("id")})
         .def("convert_token_to_id", &BertTokenizerAdapter::convert_token_to_id, "", {torch::arg("token")})
         .def_pickle(

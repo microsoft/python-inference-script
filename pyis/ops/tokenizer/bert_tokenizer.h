@@ -41,7 +41,8 @@ class BertTokenizer : public Tokenizer, public CachedObject<BertTokenizer> {
 
     std::string Serialize(ModelStorage& fs);
     void Deserialize(const std::string& state, ModelStorage& fs);
-    std::string Decode(const std::vector<int64_t>& code) override;
+    std::string Decode(const std::vector<int64_t>& code, bool skip_special_tokens,
+                       bool clean_up_tokenization_spaces) override;
 };
 
 }  // namespace ops

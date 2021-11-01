@@ -88,21 +88,27 @@ void BertTokenizer::Deserialize(const std::string& state, ModelStorage& fs) {
     }
 }
 
-std::string BertTokenizer::Decode(const std::vector<int64_t>& code) {
-    std::string result;
+std::string BertTokenizer::Decode(const std::vector<int64_t>& code, bool skip_special_tokens,
+                                  bool clean_up_tokenization_spaces) {
+    std::vector<std::string> sub_texts;
+    std::set<std::string> special_tokens({unk_token_, pad_token_, cls_token_, mask_token_, sep_token_});
     for (const auto& id : code) {
         std::string token = ConvertIdToToken(id);
-        if (!result.empty() && token.length() > suffix_indicator_.length() &&
-            token.substr(0, suffix_indicator_.size()) == suffix_indicator_) {
-            result.pop_back();
-            token = token.substr(suffix_indicator_.length());
+        if (!skip_special_tokens || special_tokens.count(token) == 0U) {
+            if (!sub_texts.empty() && token.length() > suffix_indicator_.length() &&
+                token.substr(0, suffix_indicator_.length()) == suffix_indicator_) {
+                token = token.substr(suffix_indicator_.length());
+                sub_texts.back().append(token);
+            } else {
+                sub_texts.emplace_back(token);
+            }
         }
-        result += token + " ";
     }
-    if (!result.empty()) {
-        result.pop_back();
+    std::string text = join_str(sub_texts, " ");
+    if (clean_up_tokenization_spaces) {
+        CleanUpTokenization(text);
     }
-    return result;
+    return text;
 }
 
 }  // namespace ops

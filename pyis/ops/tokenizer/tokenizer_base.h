@@ -6,6 +6,7 @@
 #include <codecvt>
 #include <fstream>
 #include <map>
+#include <set>
 #include <string>
 #include <tuple>
 #include <unordered_map>
@@ -35,7 +36,8 @@ class Tokenizer {
         const std::string& str1, const std::string& str2, int64_t max_length = 1e15,
         const std::string& truncation_strategy = "longest_first");
     virtual std::vector<std::string> Tokenize(const std::string& str) = 0;
-    virtual std::string Decode(const std::vector<int64_t>& code);
+    virtual std::string Decode(const std::vector<int64_t>& code, bool skip_special_tokens,
+                               bool clean_up_tokenization_spaces);
     std::string ConvertIdToToken(int64_t id);
     int64_t ConvertTokenToId(const std::string& str);
     std::vector<int64_t> AddSpecialToken(const std::vector<int64_t>& code);
@@ -46,6 +48,7 @@ class Tokenizer {
 
   protected:
     void LoadVocabFile();
+    void CleanUpTokenization(std::string& str);
     std::string cls_token_;
     std::string sep_token_;
     std::string unk_token_;

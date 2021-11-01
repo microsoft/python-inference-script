@@ -8,4 +8,4 @@ tokenizer: ops.BertTokenizer = ops.BertTokenizer('vocab.txt')
 
 query: str = 'what is the time in US?'
 
-token_ids: List[int] = tokenizer.tokenize(query)
+token_ids: List[int] = tokenizer.encode(query)
