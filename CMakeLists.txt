@@ -49,7 +49,7 @@ if(TORCH_BACKEND AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 endif()
 
-# force msvc to use utf-8 encoding 
+# force msvc to use utf-8 encoding
 if(MSVC)
     add_compile_options("/utf-8")
 endif()
