@@ -24,6 +24,7 @@ BertTokenizer::BertTokenizer(const std::string& vocab_file, bool do_lower_case, 
       tokenize_chinese_chars_(tokenize_chinese_chars),
       strip_accents_(strip_accents),
       suffix_indicator_(suffix_indicator) {
+    LoadVocabFile();
     if (do_basic_tokenize) {
         basic_tokenizer_ =
             std::make_shared<BasicTokenizer>(do_lower_case, do_basic_tokenize, strip_accents, true, true);

@@ -15,7 +15,6 @@ Tokenizer::Tokenizer(std::string vocab_file, std::string cls_token, std::string 
       unk_token_(std::move(unk_token)),
       pad_token_(std::move(pad_token)),
       mask_token_(std::move(mask_token)) {
-    LoadVocabFile();
 }
 void Tokenizer::Truncate(std::vector<int64_t>& ids, int64_t max_len) {
     if (max_len < 0 || max_len >= ids.size()) {

@@ -47,7 +47,7 @@ class Tokenizer {
     std::map<std::string, int64_t> GetVocab();
 
   protected:
-    void LoadVocabFile();
+    virtual void LoadVocabFile();
     void CleanUpTokenization(std::string& str);
     std::string cls_token_;
     std::string sep_token_;

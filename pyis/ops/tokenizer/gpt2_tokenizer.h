@@ -259,7 +259,14 @@ class GPT2Tokenizer : public Tokenizer {
   public:
     GPT2Tokenizer(std::string vocab_file, std::string& merges_file, std::string& unk_token, std::string& bos_token,
                   std::string& eos_token, bool add_prefix_space)
-        : Tokenizer(vocab_file) {}
+        : Tokenizer(vocab_file) {
+        
+    }
+
+    void LoadVocabFile() override {
+        
+    }
+
     std::list<std::string> SplitBySpecialTokens(const std::string& input) {
         std::list<std::string> res;
         res.emplace_back(input);
