@@ -17,9 +17,149 @@ struct BpeNode {
     int value;
 };
 
+struct SpecialTokenInfo {
+    std::string str;
+    int id;
+
+    SpecialTokenInfo(std::string p_str, int p_id) : str(std::move(p_str)), id(p_id) {
+        if (str.empty()) {
+            PYIS_THROW("Empty special token.");
+        }
+    }
+};
+
+class TokenWithRegularExp {
+  public:
+    void Set(std::string val) { m_text = val; }
+
+    std::pair<bool, std::string> GetNextToken() {
+        while (!m_text.empty()) {
+            auto res = TryMatch();
+            if (res.empty()) {
+                m_text = m_text.substr(1);
+                continue;
+            }
+            return {true, res};
+        }
+        
+        return {false, ""};
+    }
+
+  private:
+    std::string TryMatch() {
+        std::regex expression(R"awa('s|'t|'re|'ve|'m|'ll|'d| ?\[:alpha:]+| ?[:digit:]+| ?[^\s[:alpha:][:digit:]]+|\s+(?!\S)|\s+)awa");
+
+        std::smatch match_result;
+        if (std::regex_match(m_text.cbegin(), m_text.cend(), match_result, expression)) {
+            m_text = m_text.substr(match_result.begin()->length());
+            return match_result.begin()->str();
+        }
+
+        return "";
+
+    }
+
+  private:
+    std::string m_text;
+};
+
 class GPT2Tokenizer : public Tokenizer {
   public:
+    std::list<int> byte_list_;
+    std::list<SpecialTokenInfo> token_list_;
+    std::unordered_map<std::string, int> token_map_;
+    void Add(std::string p_str, int p_id) {
+        auto it = token_map_.find(p_str);
+        if (it != token_map_.end()) {
+            if (it->second != p_id) {
+                PYIS_THROW("Duplicate special tokens.");
+            }
+        } else {
+            token_map_[p_str] = p_id;
+            token_list_.push_back(SpecialTokenInfo(std::move(p_str), p_id));
+        }
+    }
+    std::vector<std::string> Tokenize(const std::string& input, int64_t max_length) {
+        std::vector<std::string> res;
 
+        if (std::all_of(res.begin(), res.end(), isblank)) {
+            return res;
+        }
+
+        auto special_token_split_res = SplitBySpeicalTokens(input);
+
+        for (auto& seg_id : special_token_split_res) {
+            if (res.size() >= max_length) break;
+
+            if (seg_id.second != -1) {
+                res.push_back(seg_id.first);
+                continue;
+            }
+
+            auto cur_input = std::move(seg_id.first);
+            // Note: keep ptr to make sure the string_view is valid in the following process
+            TokenWithRegularExp reg;
+            reg.Set(cur_input);
+
+            while (res.size() < max_length) {
+                auto token = reg.GetNextToken();
+                auto b = token.first;
+                auto tok = token.second;
+                if (!b) break;
+
+                std::string utf8_token = std::string(tok);
+
+                byte_list_.clear();
+                for (char& cp : utf8_token) {
+                    byte_list_.push_back(byte_encoder_[static_cast<unsigned char>(cp)]);
+                }
+
+                bpe(byte_list_);
+
+                for (auto p : byte_list_) {
+                    if (res.size() >= max_length) {
+                        break;
+                    }
+
+                    res.push_back(ConvertIdToToken(p));
+                }
+            }
+        }
+
+        return std::move(res);
+    }
+    std::list<std::pair<std::string, int>> SplitBySpeicalTokens(std::string input) const {
+        std::list<std::pair<std::string, int>> res;
+        res.emplace_back(std::move(input), -1);
+        for (const auto& st : token_list_) {
+            std::list<std::pair<std::string, int>> new_split_res;
+            for (auto& str : res) {
+                if (str.second != -1) {
+                    new_split_res.push_back(std::move(str));
+                    continue;
+                }
+                auto it = str.first.begin();
+                size_t search_pos = 0;
+                while (it != str.first.end()) {
+                    auto search_it = std::search(it, str.first.end(), st.str.begin(), st.str.end());
+                    if (search_it == str.first.end()) {
+                        new_split_res.emplace_back(str.first.substr(search_pos), -1);
+                        break;
+                    }
+                    auto prefixLen = search_it - it;
+                    if (prefixLen != 0) {
+                        new_split_res.emplace_back(str.first.substr(search_pos, prefixLen), -1);
+                        search_pos += prefixLen;
+                    }
+                    new_split_res.emplace_back(str.first.substr(search_pos, st.str.size()), st.id);
+                    it = search_it + st.str.size();
+                    search_pos += st.str.size();
+                }
+            }
+            std::swap(new_split_res, res);
+        }
+        return res;
+    }
     void Load(std::istream& vocab_stream, std::istream& merges_stream, const std::string& unk_token,
               const std::string& special_tokens) {
         rapidjson::Document tok_json;
@@ -41,23 +181,23 @@ class GPT2Tokenizer : public Tokenizer {
 
         std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> str_convert;
         for (auto i = 33; i <= 126; ++i) {
-            byte_encoder_[i] = GetVocabIndex(str_convert.to_bytes((char32_t)i));
+            byte_encoder_[i] = ConvertTokenToId(str_convert.to_bytes((char32_t)i));
         }
         for (auto i = 161; i <= 172; ++i) {
-            byte_encoder_[i] = GetVocabIndex(str_convert.to_bytes((char32_t)i));
+            byte_encoder_[i] = ConvertTokenToId(str_convert.to_bytes((char32_t)i));
         }
         for (auto i = 174; i <= 255; ++i) {
-            byte_encoder_[i] = GetVocabIndex(str_convert.to_bytes((char32_t)i));
+            byte_encoder_[i] = ConvertTokenToId(str_convert.to_bytes((char32_t)i));
         }
 
         int index = 256;
         for (auto i = 0; i < 33; ++i) {
-            byte_encoder_[i] = GetVocabIndex(str_convert.to_bytes((char32_t)(index++)));
+            byte_encoder_[i] = ConvertTokenToId(str_convert.to_bytes((char32_t)(index++)));
         }
         for (auto i = 127; i < 161; ++i) {
-            byte_encoder_[i] = GetVocabIndex(str_convert.to_bytes((char32_t)(index++)));
+            byte_encoder_[i] = ConvertTokenToId(str_convert.to_bytes((char32_t)(index++)));
         }
-        byte_encoder_[173] = GetVocabIndex(str_convert.to_bytes((char32_t)(index++)));
+        byte_encoder_[173] = ConvertTokenToId(str_convert.to_bytes((char32_t)(index++)));
 
         index = 0;
         std::string line;
@@ -71,9 +211,9 @@ class GPT2Tokenizer : public Tokenizer {
             }
             std::string w1 = line.substr(0, pos);
             std::string w2 = line.substr(pos + 1);
-            int iw1 = GetVocabIndex(w1);
-            int iw2 = GetVocabIndex(w2);
-            int iww = GetVocabIndex(w1 + w2);
+            int iw1 = ConvertTokenToId(w1);
+            int iw2 = ConvertTokenToId(w2);
+            int iww = ConvertTokenToId(w1 + w2);
             std::pair<int, int> key{iw1, iw2};
             BpeNode value{iww, index++};
             bpe_map_[key] = value;
@@ -103,34 +243,11 @@ class GPT2Tokenizer : public Tokenizer {
         }
     }
 
-    const auto& ByteEncoder() const { return byte_encoder_; }
-
-    size_t VocabSize() const { return vocab_map_.size(); }
-
-    int TokenToID(const std::string& input) const {
-        auto it = vocab_map_.find(input);
-        if (it == vocab_map_.end()) {
-            PYIS_THROW(("Token not found: " + input).c_str());
-        }
-        return it->second;
+    GPT2Tokenizer(std::string vocab_file, const std::string& merges_file, const std::string& unk_token,
+                  const std::string& bos_token, const std::string& eos_token, bool add_prefix_space)
+        : Tokenizer(vocab_file), merges_file_(merges_file) {
+        LoadVocabFile();
     }
-
-    const std::string& IdToToken(int id) const {
-        if ((id < 0) || (id >= id2token_map_.size())) {
-            PYIS_THROW(("Invalid ID: " + std::to_string(id)).c_str());
-        }
-        return id2token_map_[id];
-    }
-
-  private:
-    int GetVocabIndex(const std::string& str) {
-        auto it = vocab_map_.find(str);
-        if (it == vocab_map_.end()) {
-            PYIS_THROW(("Cannot find word in vocabulary: " + str).c_str());
-        }
-        return it->second;
-    }
-
   private:
     struct hash_pair {
         template <class T1, class T2>
@@ -147,11 +264,6 @@ class GPT2Tokenizer : public Tokenizer {
     std::vector<std::string> id2token_map_;
 
     int unk_id_;
-    GPT2Tokenizer(std::string vocab_file,const std::string& merges_file,const std::string& unk_token,const std::string& bos_token,
-                  const std::string& eos_token, bool add_prefix_space)
-        : Tokenizer(vocab_file) , merges_file_(merges_file) {
-        LoadVocabFile();
-    }
 
     void LoadVocabFile() override { 
         std::ifstream vocab_stream(vocab_file_);
@@ -196,64 +308,6 @@ class GPT2Tokenizer : public Tokenizer {
         }
     }
 
-  public:
-    struct SpecialTokenInfo {
-        std::string str;
-        int id;
-
-        SpecialTokenInfo(std::string p_str, int p_id) : str(std::move(p_str)), id(p_id) {
-            if (str.empty()) {
-                PYIS_THROW("Empty special token.");
-            }
-        }
-    };
-
-    std::list<SpecialTokenInfo> token_list_;
-    std::unordered_map<std::string, int> token_map_;
-    void Add(std::string p_str, int p_id) {
-        auto it = token_map_.find(p_str);
-        if (it != token_map_.end()) {
-            if (it->second != p_id) {
-                PYIS_THROW("Duplicate special tokens.");
-            }
-        } else {
-            token_map_[p_str] = p_id;
-            token_list_.push_back(SpecialTokenInfo(std::move(p_str), p_id));
-        }
-    }
-
-    std::list<std::pair<std::string, int>> SplitBySpeicalTokens(std::string input) const {
-        std::list<std::pair<std::string, int>> res;
-        res.emplace_back(std::move(input), -1);
-        for (const auto& st : token_list_) {
-            std::list<std::pair<std::string, int>> new_split_res;
-            for (auto& str : res) {
-                if (str.second != -1) {
-                    new_split_res.push_back(std::move(str));
-                    continue;
-                }
-                auto it = str.first.begin();
-                size_t search_pos = 0;
-                while (it != str.first.end()) {
-                    auto search_it = std::search(it, str.first.end(), st.str.begin(), st.str.end());
-                    if (search_it == str.first.end()) {
-                        new_split_res.emplace_back(str.first.substr(search_pos), -1);
-                        break;
-                    }
-                    auto prefixLen = search_it - it;
-                    if (prefixLen != 0) {
-                        new_split_res.emplace_back(str.first.substr(search_pos, prefixLen), -1);
-                        search_pos += prefixLen;
-                    }
-                    new_split_res.emplace_back(str.first.substr(search_pos, st.str.size()), st.id);
-                    it = search_it + st.str.size();
-                    search_pos += st.str.size();
-                }
-            }
-            std::swap(new_split_res, res);
-        }
-        return res;
-    }
 
   private:
     std::string merges_file_;
