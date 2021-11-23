@@ -79,10 +79,11 @@ class GPT2Tokenizer : public Tokenizer {
             token_list_.push_back(SpecialTokenInfo(std::move(p_str), p_id));
         }
     }
+    
     std::vector<std::string> Tokenize(const std::string& input, int64_t max_length) {
         std::vector<std::string> res;
 
-        if (std::all_of(res.begin(), res.end(), isblank)) {
+        if (std::all_of(input.begin(), input.end(), isblank)) {
             return res;
         }
 
@@ -126,8 +127,9 @@ class GPT2Tokenizer : public Tokenizer {
             }
         }
 
-        return std::move(res);
+        return res;
     }
+    
     std::list<std::pair<std::string, int>> SplitBySpeicalTokens(std::string input) const {
         std::list<std::pair<std::string, int>> res;
         res.emplace_back(std::move(input), -1);
