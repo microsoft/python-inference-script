@@ -7,6 +7,7 @@
 
 #include "gtest/gtest.h"
 #include "pyis/ops/text/cedar_trie.h"
+#include "pyis/ops/tokenizer/gpt2_tokenizer.h"
 TEST(TestCedarTrie, Basic) {
     pyis::ops::CedarTrie trie;
     trie.Insert("Alpha", 1);
@@ -157,4 +158,8 @@ TEST(TestCedarTrie, PrefixPredict) {
         ASSERT_EQ(longest, std::get<0>(query_result.value()));
         ASSERT_EQ(dir[longest], std::get<1>(query_result.value()));
     }
+}
+
+TEST(TestGPT2Tokenizer, Basic) { pyis::ops::GPT2Tokenizer tokenizer("D:\\vocab.json", "D:\\merges.txt");
+    tokenizer.Tokenize("hello world");
 }

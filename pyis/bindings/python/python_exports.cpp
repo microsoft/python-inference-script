@@ -28,6 +28,7 @@ void init_linear_svm(py::module& m);
 void init_immutable_trie(py::module& m);
 void init_trie(py::module& m);
 void init_linear_chain_crf(py::module& m);
+void init_gpt2_tokenizer(py::module& m);
 
 PYBIND11_MODULE(pyis_python, m) {
     init_model_context(m);
@@ -41,6 +42,7 @@ PYBIND11_MODULE(pyis_python, m) {
 
 #if defined(ENABLE_OP_BERT_TOKENIZER)
     init_bert_tokenizer(ops);
+    init_gpt2_tokenizer(ops);
 #endif
 
 #if defined(ENABLE_OP_CEDAR_TRIE)

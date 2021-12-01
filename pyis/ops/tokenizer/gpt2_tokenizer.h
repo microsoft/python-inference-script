@@ -47,7 +47,7 @@ class TokenWithRegularExp {
 
   private:
     std::string TryMatch() {
-        std::regex expression(R"awa('s|'t|'re|'ve|'m|'ll|'d| ?\[:alpha:]+| ?[:digit:]+| ?[^\s[:alpha:][:digit:]]+|\s+(?!\S)|\s+)awa");
+        std::regex expression(R"awa('s|'t|'re|'ve|'m|'ll|'d| ?[:alpha:]+| ?[:digit:]+| ?[^\s[:alpha:][:digit:]]+|\s+(?!\S)|\s+)awa");
 
         std::smatch match_result;
         if (std::regex_match(m_text.cbegin(), m_text.cend(), match_result, expression)) {
@@ -80,7 +80,8 @@ class GPT2Tokenizer : public Tokenizer {
         }
     }
     
-    std::vector<std::string> Tokenize(const std::string& input, int64_t max_length) {
+    std::vector<std::string> Tokenize(const std::string& input) {
+        int64_t max_length = 10000;
         std::vector<std::string> res;
 
         if (std::all_of(input.begin(), input.end(), isblank)) {
@@ -245,8 +246,8 @@ class GPT2Tokenizer : public Tokenizer {
         }
     }
 
-    GPT2Tokenizer(std::string vocab_file, const std::string& merges_file, const std::string& unk_token,
-                  const std::string& bos_token, const std::string& eos_token, bool add_prefix_space)
+    GPT2Tokenizer(std::string vocab_file, const std::string& merges_file, const std::string& unk_token = "<|endoftext|>", const std::string& bos_token = "<|endoftext|>",
+                  const std::string& eos_token = "<|endoftext|>", bool add_prefix_space=false)
         : Tokenizer(vocab_file), merges_file_(merges_file) {
         LoadVocabFile();
     }

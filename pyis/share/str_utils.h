@@ -55,4 +55,36 @@ char32_t StripAccent(char32_t c);
 
 void FindAndReplaceAll(std::string& data, const std::string& str_to_search, const std::string& str_to_replace);
 
+class ustring : public std::u32string {
+  public:
+    ustring();
+    explicit ustring(char* str);
+    explicit ustring(const char* str);
+    explicit ustring(std::string& str);
+    explicit ustring(const std::string& str);
+    explicit ustring(char32_t* str);
+    explicit ustring(const char32_t* str);
+    explicit ustring(std::u32string& str);
+    explicit ustring(std::u32string&& str);
+    explicit ustring(const std::u32string& str);
+    explicit ustring(const std::u32string&& str);
+
+    explicit operator std::string();
+    explicit operator std::string() const;
+
+  private:
+    using utf8_converter = std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t>;
+};
+
+
 }  // namespace pyis
+
+namespace std {
+template <>
+struct hash<pyis::ustring> {
+    size_t operator()(const pyis::ustring& __str) const noexcept {
+        hash<u32string> standard_hash;
+        return standard_hash(static_cast<u32string>(__str));
+    }
+};
+}  // namespace std
