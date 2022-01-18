@@ -160,6 +160,7 @@ TEST(TestCedarTrie, PrefixPredict) {
     }
 }
 
-TEST(TestGPT2Tokenizer, Basic) { pyis::ops::GPT2Tokenizer tokenizer("D:\\vocab.json", "D:\\merges.txt");
+TEST(TestGPT2Tokenizer, Basic) {
+    pyis::ops::GPT2Tokenizer tokenizer("D:\\vocab.json", "D:\\merges.txt");
     tokenizer.Tokenize("hello world");
 }

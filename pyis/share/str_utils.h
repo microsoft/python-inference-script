@@ -55,6 +55,8 @@ char32_t StripAccent(char32_t c);
 
 void FindAndReplaceAll(std::string& data, const std::string& str_to_search, const std::string& str_to_replace);
 
+void unescape_string(std::string& str);
+
 class ustring : public std::u32string {
   public:
     ustring();

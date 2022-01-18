@@ -166,6 +166,13 @@ class GPT2Tokenizer : public Tokenizer {
     void Load(std::istream& vocab_stream, std::istream& merges_stream, const std::string& unk_token,
               const std::string& special_tokens) {
         rapidjson::Document tok_json;
+        //std::stringstream buf;
+        //buf << vocab_stream.rdbuf();
+        //std::string str(buf.str());
+        
+        //unescape_string(str);
+        //system("chcp 65001");
+
         rapidjson::IStreamWrapper vocab_wrapper(vocab_stream);
         tok_json.ParseStream(vocab_wrapper);
         vocab_map_.clear();
@@ -263,7 +270,7 @@ class GPT2Tokenizer : public Tokenizer {
     std::unordered_map<std::pair<int, int>, BpeNode, hash_pair> bpe_map_;
 
     int byte_encoder_[256] = {};
-    std::unordered_map<std::string, int> vocab_map_;
+    //std::unordered_map<std::string, int> vocab_map_;
     std::vector<std::string> id2token_map_;
 
     int unk_id_;
@@ -271,7 +278,7 @@ class GPT2Tokenizer : public Tokenizer {
     void LoadVocabFile() override { 
         std::ifstream vocab_stream(vocab_file_);
         std::ifstream merges_stream(merges_file_);
-        Load(vocab_stream, merges_stream, unk_token_, "");
+        Load(vocab_stream, merges_stream, "<|endoftext|>", "<|endoftext|>");
     }
 
     

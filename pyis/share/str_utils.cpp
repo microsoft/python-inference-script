@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 #include "str_utils.h"
+#include <iostream>
 
 namespace pyis {
 
@@ -124,6 +125,31 @@ void FindAndReplaceAll(std::string& data, const std::string& str_to_search, cons
     while (pos != std::string::npos) {
         data.replace(pos, str_to_search.length(), str_to_replace);
         pos = data.find(str_to_search, pos + str_to_replace.length());
+    }
+}
+
+void unescape_string(std::string& str) {
+    std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> conv;
+    std::string::size_type startIdx = 0;
+    while (true) {
+        startIdx = str.find("\\u", startIdx);
+        if (startIdx == std::string::npos) return;
+
+        std::string::size_type endIdx = str.find_first_not_of("0123456789abcdefABCDEF", startIdx + 2);
+        if (endIdx == std::string::npos || endIdx - (startIdx + 2) < 4) return;
+
+        std::string tmpStr = str.substr(startIdx + 2, 4);
+        std::istringstream iss(tmpStr);
+
+        uint32_t cp;
+        if (iss >> std::hex >> cp) {
+            ustring utf8;
+            utf8 += static_cast<char32_t>(cp);
+            std::string t = (std::string)utf8;
+            str.replace(startIdx, 2 + tmpStr.length(), std::string(utf8));
+            startIdx += utf8.length();
+        } else
+            startIdx += 2;
     }
 }
 
