@@ -75,7 +75,7 @@ class TokenWithRegularExp {
             m_text = ustring(m_text.substr(i));
             return std::string(res);
         }
-        if (isUnicodeCategoryL(m_text[1])) {
+        if (isUnicodeCategoryL(m_text[0])) {
             size_t i = 1;
             for (; i < m_text.size(); ++i) {
                 if (!isUnicodeCategoryL(m_text[i])) break;
@@ -96,7 +96,7 @@ class TokenWithRegularExp {
             m_text = ustring(m_text.substr(i));
             return std::string(res);
         }
-        if (isUnicodeCategoryN(m_text[1])) {
+        if (isUnicodeCategoryN(m_text[0])) {
             size_t i = 1;
             for (; i < m_text.size(); ++i) {
                 if (!isUnicodeCategoryN(m_text[i])) break;
