@@ -90,3 +90,11 @@ struct hash<pyis::ustring> {
     }
 };
 }  // namespace std
+
+bool isUnicodeCategoryL(char32_t ch);
+
+bool isUnicodeCategoryN(char32_t ch);
+
+bool isUnicodeCategoryZ(char32_t ch);
+
+bool NotLNZ(char32_t ch);

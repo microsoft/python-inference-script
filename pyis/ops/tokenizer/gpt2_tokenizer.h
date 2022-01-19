@@ -30,13 +30,13 @@ struct SpecialTokenInfo {
 
 class TokenWithRegularExp {
   public:
-    void Set(std::string val) { m_text = val; }
+    void Set(std::string val) { m_text = ustring(val); }
 
     std::pair<bool, std::string> GetNextToken() {
         while (!m_text.empty()) {
             auto res = TryMatch();
             if (res.empty()) {
-                m_text = m_text.substr(1);
+                m_text = ustring(m_text.substr(1));
                 continue;
             }
             return {true, res};
@@ -47,20 +47,109 @@ class TokenWithRegularExp {
 
   private:
     std::string TryMatch() {
-        std::regex expression(R"awa('s|'t|'re|'ve|'m|'ll|'d| ?[:alpha:]+| ?[:digit:]+| ?[^\s[:alpha:][:digit:]]+|\s+(?!\S)|\s+)awa");
+        if ((m_text[0] == U'\'') && (m_text.size() > 1)) {
+            if ((m_text[1] == U's') || (m_text[1] == U't') || (m_text[1] == U'm') || (m_text[1] == U'd')) {
+                ustring res = ustring(m_text.substr(0, 2));
+                m_text = ustring(m_text.substr(2));
+                return std::string(res);
+            }
 
-        std::smatch match_result;
-        if (std::regex_match(m_text.cbegin(), m_text.cend(), match_result, expression)) {
-            m_text = m_text.substr(match_result.begin()->length());
-            return match_result.begin()->str();
+            if (m_text.size() > 2) {
+                if (((m_text[1] == U'r') && (m_text[2] == U'e')) || ((m_text[1] == U'v') && (m_text[2] == U'e')) ||
+                    ((m_text[1] == U'l') && (m_text[2] == U'l'))) {
+                    ustring res = ustring(m_text.substr(0, 3));
+                    m_text = ustring(m_text.substr(3));
+                    return std::string(res);
+                }
+            }
+        }
+
+        // ?\p{L}+
+        if ((m_text[0] == U' ') && (m_text.size() > 1) &&
+            isUnicodeCategoryL(m_text[1])) {
+            size_t i = 2;
+            for (; i < m_text.size(); ++i) {
+                if (!isUnicodeCategoryL(m_text[i])) break;
+            }
+            ustring res = ustring(m_text.substr(0, i));
+            m_text = ustring(m_text.substr(i));
+            return std::string(res);
+        }
+        if (isUnicodeCategoryL(m_text[1])) {
+            size_t i = 1;
+            for (; i < m_text.size(); ++i) {
+                if (!isUnicodeCategoryL(m_text[i])) break;
+            }
+            ustring res = ustring(m_text.substr(0, i));
+            m_text = ustring(m_text.substr(i));
+            return std::string(res);
+        }
+
+        // ?\p{N}+
+        if ((m_text[0] == U' ') && (m_text.size() > 1) &&
+            isUnicodeCategoryN(m_text[1])) {
+            size_t i = 2;
+            for (; i < m_text.size(); ++i) {
+                if (!isUnicodeCategoryN(m_text[i])) break;
+            }
+            ustring res = ustring(m_text.substr(0, i));
+            m_text = ustring(m_text.substr(i));
+            return std::string(res);
+        }
+        if (isUnicodeCategoryN(m_text[1])) {
+            size_t i = 1;
+            for (; i < m_text.size(); ++i) {
+                if (!isUnicodeCategoryN(m_text[i])) break;
+            }
+            ustring res = ustring(m_text.substr(0, i));
+            m_text = ustring(m_text.substr(i));
+            return std::string(res);
+        }
+
+        // ?[^\s\p{L}\p{N}]+
+        if ((m_text[0] == U' ') && (m_text.size() > 1) && (NotLNZ(m_text[1]))) {
+            size_t i = 2;
+            for (; i < m_text.size(); ++i) {
+                if (!NotLNZ(m_text[i])) break;
+            }
+            ustring res = ustring(m_text.substr(0, i));
+            m_text = ustring(m_text.substr(i));
+            return std::string(res);
+        }
+        if (NotLNZ(m_text[0])) {
+            size_t i = 1;
+            for (; i < m_text.size(); ++i) {
+                if (!NotLNZ(m_text[i])) break;
+            }
+            ustring res = ustring(m_text.substr(0, i));
+            m_text = ustring(m_text.substr(i));
+            return std::string(res);
+        }
+
+        // \s+(?!\S)|\s+
+        if ((m_text.size() >= 1) && (isUnicodeCategoryZ(m_text[0]))) {
+            size_t i = 1;
+            for (; i < m_text.size(); ++i) {
+                if (!isUnicodeCategoryZ(m_text[i])) break;
+            }
+            if ((i > 1) && (i != m_text.size()))  //\s+(?!\S)
+            {
+                i--;
+                ustring res = ustring(m_text.substr(0, i));
+                m_text = ustring(m_text.substr(i));
+                return std::string(res);
+            }
+            // \s+
+            ustring res = ustring(m_text.substr(0, i));
+            m_text =ustring( m_text.substr(i));
+            return std::string(res);
         }
 
         return "";
-
     }
 
   private:
-    std::string m_text;
+    ustring m_text;
 };
 
 class GPT2Tokenizer : public Tokenizer {
@@ -247,9 +336,9 @@ class GPT2Tokenizer : public Tokenizer {
             }
         }
 
-        id2token_map_.resize(vocab_map_.size());
+        vocab_map_reverse_.clear();
         for (const auto& ite : vocab_map_) {
-            id2token_map_[ite.second] = ite.first;
+            vocab_map_reverse_[ite.second] = ite.first;
         }
     }
 
