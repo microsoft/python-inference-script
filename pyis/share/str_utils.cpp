@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 #include "str_utils.h"
+
 #include <iostream>
 
 namespace pyis {
@@ -98,19 +99,19 @@ std::string wstr_to_str(const std::wstring& wstr) {
     return result;
 }
 
-bool isCJK(char32_t c) {
+bool is_CJK(char32_t c) {
     return (c >= 0x4E00 && c <= 0x9FFF) || (c >= 0x3400 && c <= 0x4DBF) || (c >= 0x20000 && c <= 0x2A6DF) ||
            (c >= 0x2A700 && c <= 0x2B73F) || (c >= 0x2B740 && c <= 0x2B81F) || (c >= 0x2B820 && c <= 0x2CEAF) ||
            (c >= 0xF900 && c <= 0xFAFF) || (c >= 0x2F800 && c <= 0x2FA1F);
 }
 
-bool IsAccent(char32_t c) {
+bool is_accent(char32_t c) {
     // only support part of accent
     // [TODO] support more accent
     return c >= 0x300 && c <= 0x36F;
 }
 
-char32_t StripAccent(char32_t c) {
+char32_t strip_accent(char32_t c) {
     //   "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ"
     const char* tr = "AAAAAAÆCEEEEIIIIÐNOOOOO×ØUUUUYÞßaaaaaaæceeeeiiiiðnooooo÷øuuuuyþy";
     if (c < 192 || c > 255) {
@@ -120,7 +121,7 @@ char32_t StripAccent(char32_t c) {
     return tr[c - 192];
 }
 
-void FindAndReplaceAll(std::string& data, const std::string& str_to_search, const std::string& str_to_replace) {
+void replace_all(std::string& data, const std::string& str_to_search, const std::string& str_to_replace) {
     size_t pos = data.find(str_to_search);
     while (pos != std::string::npos) {
         data.replace(pos, str_to_search.length(), str_to_replace);
@@ -128,78 +129,7 @@ void FindAndReplaceAll(std::string& data, const std::string& str_to_search, cons
     }
 }
 
-void unescape_string(std::string& str) {
-    std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> conv;
-    std::string::size_type startIdx = 0;
-    while (true) {
-        startIdx = str.find("\\u", startIdx);
-        if (startIdx == std::string::npos) return;
-
-        std::string::size_type endIdx = str.find_first_not_of("0123456789abcdefABCDEF", startIdx + 2);
-        if (endIdx == std::string::npos || endIdx - (startIdx + 2) < 4) return;
-
-        std::string tmpStr = str.substr(startIdx + 2, 4);
-        std::istringstream iss(tmpStr);
-
-        uint32_t cp;
-        if (iss >> std::hex >> cp) {
-            ustring utf8;
-            utf8 += static_cast<char32_t>(cp);
-            std::string t = (std::string)utf8;
-            str.replace(startIdx, 2 + tmpStr.length(), std::string(utf8));
-            startIdx += utf8.length();
-        } else
-            startIdx += 2;
-    }
-}
-
-ustring::ustring() : std::u32string() {}
-
-ustring::ustring(char* str) {
-    utf8_converter str_cvt;
-    assign(str_cvt.from_bytes(str));
-}
-
-ustring::ustring(const char* str) {
-    utf8_converter str_cvt;
-    assign(str_cvt.from_bytes(str));
-}
-
-ustring::ustring(std::string& str) {
-    utf8_converter str_cvt;
-    assign(str_cvt.from_bytes(str));
-}
-
-ustring::ustring(const std::string& str) {
-    utf8_converter str_cvt;
-    assign(str_cvt.from_bytes(str));
-}
-
-ustring::ustring(char32_t* str) : std::u32string(str) {}
-
-ustring::ustring(const char32_t* str) : std::u32string(str) {}
-
-ustring::ustring(std::u32string& str) : std::u32string(str) {}
-
-ustring::ustring(std::u32string&& str) : std::u32string(str) {}
-
-ustring::ustring(const std::u32string& str) : std::u32string(str) {}
-
-ustring::ustring(const std::u32string&& str) : std::u32string(str) {}
-
-ustring::operator std::string() {
-    utf8_converter str_cvt;
-    return str_cvt.to_bytes(*this);
-}
-
-ustring::operator std::string() const {
-    utf8_converter str_cvt;
-    return str_cvt.to_bytes(*this);
-}
-
-}  // namespace pyis
-
-bool isUnicodeCategoryL(char32_t ch) {
+bool is_unicode_category_L(const char32_t& ch) {
     // Unicode Category L code range
     const std::vector<std::pair<char32_t, char32_t>> LCategoryTable = {
         {65, 90},         {97, 122},        {170, 170},       {181, 181},       {186, 186},       {192, 214},
@@ -312,7 +242,7 @@ bool isUnicodeCategoryL(char32_t ch) {
     return false;
 }
 
-bool isUnicodeCategoryN(char32_t ch) {
+bool is_unicode_category_N(const char32_t& ch) {
     // Unicode Category N code range
     const std::vector<std::pair<char32_t, char32_t>> NCategoryTable = {
         {48, 57},         {178, 179},       {185, 185},       {188, 190},       {1632, 1641},     {1776, 1785},
@@ -345,7 +275,7 @@ bool isUnicodeCategoryN(char32_t ch) {
     return false;
 }
 
-bool isUnicodeCategoryZ(char32_t ch) {
+bool is_unicode_category_Z(const char32_t& ch) {
     // Unicode Category Z code range
     const std::vector<std::pair<char32_t, char32_t>> ZCategoryTable = {
         {32, 32}, {160, 160}, {5760, 5760}, {8192, 8202}, {8232, 8233}, {8239, 8239}, {8287, 8287}, {12288, 12288}};
@@ -357,4 +287,52 @@ bool isUnicodeCategoryZ(char32_t ch) {
     return false;
 }
 
-bool NotLNZ(char32_t ch) { return !isUnicodeCategoryL(ch) && !isUnicodeCategoryN(ch) && !isUnicodeCategoryZ(ch); }
+bool not_category_LNZ(const char32_t& ch) {
+    return !is_unicode_category_L(ch) && !is_unicode_category_N(ch) && !is_unicode_category_Z(ch);
+}
+
+ustring::ustring() : std::u32string() {}
+
+ustring::ustring(char* str) {
+    utf8_converter str_cvt;
+    assign(str_cvt.from_bytes(str));
+}
+
+ustring::ustring(const char* str) {
+    utf8_converter str_cvt;
+    assign(str_cvt.from_bytes(str));
+}
+
+ustring::ustring(std::string& str) {
+    utf8_converter str_cvt;
+    assign(str_cvt.from_bytes(str));
+}
+
+ustring::ustring(const std::string& str) {
+    utf8_converter str_cvt;
+    assign(str_cvt.from_bytes(str));
+}
+
+ustring::ustring(char32_t* str) : std::u32string(str) {}
+
+ustring::ustring(const char32_t* str) : std::u32string(str) {}
+
+ustring::ustring(std::u32string& str) : std::u32string(str) {}
+
+ustring::ustring(std::u32string&& str) : std::u32string(str) {}
+
+ustring::ustring(const std::u32string& str) : std::u32string(str) {}
+
+ustring::ustring(const std::u32string&& str) : std::u32string(str) {}
+
+ustring::operator std::string() {
+    utf8_converter str_cvt;
+    return str_cvt.to_bytes(*this);
+}
+
+ustring::operator std::string() const {
+    utf8_converter str_cvt;
+    return str_cvt.to_bytes(*this);
+}
+
+}  // namespace pyis

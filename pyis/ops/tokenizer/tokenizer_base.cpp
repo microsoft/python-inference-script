@@ -211,16 +211,16 @@ void Tokenizer::LoadVocabFile() {
 }
 
 void Tokenizer::CleanUpTokenization(std::string& str) {
-    FindAndReplaceAll(str, " .", ".");
-    FindAndReplaceAll(str, " ?", "?");
-    FindAndReplaceAll(str, " !", "!");
-    FindAndReplaceAll(str, " ,", ",");
-    FindAndReplaceAll(str, " ' ", "'");
-    FindAndReplaceAll(str, " n't", "n't");
-    FindAndReplaceAll(str, " 'm", "'m");
-    FindAndReplaceAll(str, " 's", "'s");
-    FindAndReplaceAll(str, " 've", "'ve");
-    FindAndReplaceAll(str, " 're", "'re");
+    replace_all(str, " .", ".");
+    replace_all(str, " ?", "?");
+    replace_all(str, " !", "!");
+    replace_all(str, " ,", ",");
+    replace_all(str, " ' ", "'");
+    replace_all(str, " n't", "n't");
+    replace_all(str, " 'm", "'m");
+    replace_all(str, " 's", "'s");
+    replace_all(str, " 've", "'ve");
+    replace_all(str, " 're", "'re");
 }
 
 }  // namespace ops
