@@ -4,6 +4,132 @@ namespace pyis {
 
 namespace ops {
 
+
+
+
+
+class TokenWithRegularExp {
+  public:
+    void Set(std::string val) { m_text = ustring(val); }
+
+    std::pair<bool, std::string> GetNextToken() {
+        while (!m_text.empty()) {
+            auto res = TryMatch();
+            if (res.empty()) {
+                m_text = ustring(m_text.substr(1));
+                continue;
+            }
+            return {true, res};
+        }
+
+        return {false, ""};
+    }
+
+  private:
+    std::string TryMatch() {
+        if ((m_text[0] == U'\'') && (m_text.size() > 1)) {
+            if ((m_text[1] == U's') || (m_text[1] == U't') || (m_text[1] == U'm') || (m_text[1] == U'd')) {
+                ustring res = ustring(m_text.substr(0, 2));
+                m_text = ustring(m_text.substr(2));
+                return std::string(res);
+            }
+
+            if (m_text.size() > 2) {
+                if (((m_text[1] == U'r') && (m_text[2] == U'e')) || ((m_text[1] == U'v') && (m_text[2] == U'e')) ||
+                    ((m_text[1] == U'l') && (m_text[2] == U'l'))) {
+                    ustring res = ustring(m_text.substr(0, 3));
+                    m_text = ustring(m_text.substr(3));
+                    return std::string(res);
+                }
+            }
+        }
+
+        // ?\p{L}+
+        if ((m_text[0] == U' ') && (m_text.size() > 1) && is_unicode_category_L(m_text[1])) {
+            size_t i = 2;
+            for (; i < m_text.size(); ++i) {
+                if (!is_unicode_category_L(m_text[i])) break;
+            }
+            ustring res = ustring(m_text.substr(0, i));
+            m_text = ustring(m_text.substr(i));
+            return std::string(res);
+        }
+        if (is_unicode_category_L(m_text[0])) {
+            size_t i = 1;
+            for (; i < m_text.size(); ++i) {
+                if (!is_unicode_category_L(m_text[i])) break;
+            }
+            ustring res = ustring(m_text.substr(0, i));
+            m_text = ustring(m_text.substr(i));
+            return std::string(res);
+        }
+
+        // ?\p{N}+
+        if ((m_text[0] == U' ') && (m_text.size() > 1) && is_unicode_category_N(m_text[1])) {
+            size_t i = 2;
+            for (; i < m_text.size(); ++i) {
+                if (!is_unicode_category_N(m_text[i])) break;
+            }
+            ustring res = ustring(m_text.substr(0, i));
+            m_text = ustring(m_text.substr(i));
+            return std::string(res);
+        }
+        if (is_unicode_category_N(m_text[0])) {
+            size_t i = 1;
+            for (; i < m_text.size(); ++i) {
+                if (!is_unicode_category_N(m_text[i])) break;
+            }
+            ustring res = ustring(m_text.substr(0, i));
+            m_text = ustring(m_text.substr(i));
+            return std::string(res);
+        }
+
+        // ?[^\s\p{L}\p{N}]+
+        if ((m_text[0] == U' ') && (m_text.size() > 1) && (not_category_LNZ(m_text[1]))) {
+            size_t i = 2;
+            for (; i < m_text.size(); ++i) {
+                if (!not_category_LNZ(m_text[i])) break;
+            }
+            ustring res = ustring(m_text.substr(0, i));
+            m_text = ustring(m_text.substr(i));
+            return std::string(res);
+        }
+        if (not_category_LNZ(m_text[0])) {
+            size_t i = 1;
+            for (; i < m_text.size(); ++i) {
+                if (!not_category_LNZ(m_text[i])) break;
+            }
+            ustring res = ustring(m_text.substr(0, i));
+            m_text = ustring(m_text.substr(i));
+            return std::string(res);
+        }
+
+        // \s+(?!\S)|\s+
+        if ((m_text.size() >= 1) && (is_unicode_category_Z(m_text[0]))) {
+            size_t i = 1;
+            for (; i < m_text.size(); ++i) {
+                if (!is_unicode_category_Z(m_text[i])) break;
+            }
+            if ((i > 1) && (i != m_text.size()))  //\s+(?!\S)
+            {
+                i--;
+                ustring res = ustring(m_text.substr(0, i));
+                m_text = ustring(m_text.substr(i));
+                return std::string(res);
+            }
+            // \s+
+            ustring res = ustring(m_text.substr(0, i));
+            m_text = ustring(m_text.substr(i));
+            return std::string(res);
+        }
+
+        return "";
+    }
+
+  private:
+    ustring m_text;
+};
+
 void GPT2Tokenizer::Add(std::string p_str, int p_id) {
     auto it = token_map_.find(p_str);
     if (it != token_map_.end()) {
@@ -103,13 +229,6 @@ inline std::list<std::pair<std::string, int>> GPT2Tokenizer::SplitBySpeicalToken
 inline void GPT2Tokenizer::Load(std::istream& vocab_stream, std::istream& merges_stream, const std::string& unk_token,
                                 const std::string& special_tokens) {
     rapidjson::Document tok_json;
-    // std::stringstream buf;
-    // buf << vocab_stream.rdbuf();
-    // std::string str(buf.str());
-
-    // unescape_string(str);
-    // system("chcp 65001");
-
     rapidjson::IStreamWrapper vocab_wrapper(vocab_stream);
     tok_json.ParseStream(vocab_wrapper);
     vocab_map_.clear();
@@ -123,28 +242,30 @@ inline void GPT2Tokenizer::Load(std::istream& vocab_stream, std::istream& merges
     } else {
         int id = static_cast<int>(vocab_map_.size());
         vocab_map_[unk_token] = id;
-        std::cerr << "Special token (" << unk_token << ") have been added in the vocabulary." << std::endl;
     }
 
     std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> str_convert;
     for (auto i = 33; i <= 126; ++i) {
-        byte_encoder_[i] = ConvertTokenToId(str_convert.to_bytes((char32_t)i));
+        byte_encoder_[i] = ConvertTokenToId(str_convert.to_bytes(static_cast<char32_t>(i)));
     }
     for (auto i = 161; i <= 172; ++i) {
-        byte_encoder_[i] = ConvertTokenToId(str_convert.to_bytes((char32_t)i));
+        byte_encoder_[i] = ConvertTokenToId(str_convert.to_bytes(static_cast<char32_t>(i)));
     }
     for (auto i = 174; i <= 255; ++i) {
-        byte_encoder_[i] = ConvertTokenToId(str_convert.to_bytes((char32_t)i));
+        byte_encoder_[i] = ConvertTokenToId(str_convert.to_bytes(static_cast<char32_t>(i)));
     }
 
     int index = 256;
     for (auto i = 0; i < 33; ++i) {
-        byte_encoder_[i] = ConvertTokenToId(str_convert.to_bytes((char32_t)(index++)));
+        byte_encoder_[i] = ConvertTokenToId(str_convert.to_bytes(static_cast<char32_t>(index)));
+        ++index;
     }
     for (auto i = 127; i < 161; ++i) {
-        byte_encoder_[i] = ConvertTokenToId(str_convert.to_bytes((char32_t)(index++)));
+        byte_encoder_[i] = ConvertTokenToId(str_convert.to_bytes(static_cast<char32_t>(index)));
+        ++index;
     }
-    byte_encoder_[173] = ConvertTokenToId(str_convert.to_bytes((char32_t)(index++)));
+    byte_encoder_[173] = ConvertTokenToId(str_convert.to_bytes(static_cast<char32_t>(index)));
+    ++index;
 
     index = 0;
     std::string line;
@@ -154,7 +275,7 @@ inline void GPT2Tokenizer::Load(std::istream& vocab_stream, std::istream& merges
         if ((line[0] == '#') && (index == 0)) continue;
         auto pos = line.find(' ');
         if (pos == std::string::npos) {
-            PYIS_THROW("Cannot know how to parse line: ");
+            PYIS_THROW("Cannot parse line: ");
         }
         std::string w1 = line.substr(0, pos);
         std::string w2 = line.substr(pos + 1);
@@ -190,20 +311,20 @@ inline void GPT2Tokenizer::Load(std::istream& vocab_stream, std::istream& merges
     }
 }
 
-inline GPT2Tokenizer::GPT2Tokenizer(std::string vocab_file, const std::string& merges_file,
+GPT2Tokenizer::GPT2Tokenizer(std::string vocab_file, const std::string& merges_file,
                                     const std::string& unk_token, const std::string& bos_token,
                                     const std::string& eos_token, bool add_prefix_space)
     : Tokenizer(vocab_file), merges_file_(merges_file) {
     LoadVocabFile();
 }
 
-inline void GPT2Tokenizer::LoadVocabFile() {
+void GPT2Tokenizer::LoadVocabFile() {
     std::ifstream vocab_stream(vocab_file_);
     std::ifstream merges_stream(merges_file_);
     Load(vocab_stream, merges_stream, "<|endoftext|>", "<|endoftext|>");
 }
 
-inline void GPT2Tokenizer::bpe(std::list<int>& vals) const {
+void GPT2Tokenizer::bpe(std::list<int>& vals) const {
     while (vals.size() >= 2) {
         auto pos_it = vals.end();
         int minval = std::numeric_limits<int>::max();
