@@ -84,7 +84,6 @@ class ustring : public std::u32string {
     using utf8_converter = std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t>;
 };
 
-
 }  // namespace pyis
 
 namespace std {
