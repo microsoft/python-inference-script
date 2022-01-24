@@ -21,8 +21,7 @@ void init_gpt2_tokenizer(py::module& m) {
             For tokenizing text into id sequences (same as Bert Tokenizer Fast)
 
         )pbdoc")
-        .def(py::init<std::string, std::string>(),
-             py::arg("vocab_file"), py::arg("merges_file"),
+        .def(py::init<std::string, std::string>(), py::arg("vocab_file"), py::arg("merges_file"),
              R"pbdoc(
                 Create a BertTokenizer instance
 

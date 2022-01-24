@@ -10,7 +10,7 @@ pyis::ops::WordpieceTokenizer::WordpieceTokenizer(const std::string& vocab_file,
     : Tokenizer(vocab_file, cls_token, sep_token, unk_token, pad_token, mask_token),
       word_piece_prefix_(std::move(suffix_indicator)) {
     LoadVocabFile();
-    }
+}
 
 std::vector<std::string> pyis::ops::WordpieceTokenizer::Tokenize(const std::string& str) {
     std::vector<std::string> result;

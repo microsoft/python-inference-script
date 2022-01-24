@@ -1,12 +1,7 @@
 #include "gpt2_tokenizer.h"
 
 namespace pyis {
-
 namespace ops {
-
-
-
-
 
 class TokenWithRegularExp {
   public:
@@ -21,7 +16,6 @@ class TokenWithRegularExp {
             }
             return {true, res};
         }
-
         return {false, ""};
     }
 
@@ -125,8 +119,6 @@ class TokenWithRegularExp {
 
         return "";
     }
-
-  private:
     ustring m_text;
 };
 
@@ -161,7 +153,6 @@ inline std::vector<std::string> GPT2Tokenizer::Tokenize(const std::string& input
         }
 
         auto cur_input = std::move(seg_id.first);
-        // Note: keep ptr to make sure the string_view is valid in the following process
         TokenWithRegularExp reg;
         reg.Set(cur_input);
 
@@ -184,12 +175,10 @@ inline std::vector<std::string> GPT2Tokenizer::Tokenize(const std::string& input
                 if (res.size() >= max_length) {
                     break;
                 }
-
                 res.push_back(ConvertIdToToken(p));
             }
         }
     }
-
     return res;
 }
 
@@ -311,9 +300,8 @@ inline void GPT2Tokenizer::Load(std::istream& vocab_stream, std::istream& merges
     }
 }
 
-GPT2Tokenizer::GPT2Tokenizer(std::string vocab_file, const std::string& merges_file,
-                                    const std::string& unk_token, const std::string& bos_token,
-                                    const std::string& eos_token, bool add_prefix_space)
+GPT2Tokenizer::GPT2Tokenizer(std::string vocab_file, const std::string& merges_file, const std::string& unk_token,
+                             const std::string& bos_token, const std::string& eos_token, bool add_prefix_space)
     : Tokenizer(vocab_file), merges_file_(merges_file) {
     LoadVocabFile();
 }
