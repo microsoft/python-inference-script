@@ -1,5 +1,6 @@
 #include <functional>
 #include <iostream>
+#include <list>
 #include <regex>
 
 #include "rapidjson/document.h"
@@ -32,8 +33,7 @@ class GPT2Tokenizer : public Tokenizer {
     void Add(std::string p_str, int p_id);
     std::vector<std::string> Tokenize(const std::string& input);
     std::list<std::pair<std::string, int>> SplitBySpeicalTokens(std::string input) const;
-    void Load(std::istream& vocab_stream, std::istream& merges_stream, const std::string& unk_token,
-              const std::string& special_tokens);
+    void Load(std::istream& vocab_stream, std::istream& merges_stream, const std::string& unk_token);
     GPT2Tokenizer(std::string vocab_file, const std::string& merges_file,
                   const std::string& unk_token = "<|endoftext|>", const std::string& bos_token = "<|endoftext|>",
                   const std::string& eos_token = "<|endoftext|>", bool add_prefix_space = false);
@@ -54,7 +54,6 @@ class GPT2Tokenizer : public Tokenizer {
     std::unordered_map<std::pair<int, int>, BpeNode, hash_pair> bpe_map_;
     std::string merges_file_;
     int byte_encoder_[256] = {};
-    int unk_id_;
 
     void LoadVocabFile() override;
     void bpe(std::list<int>& vals) const;

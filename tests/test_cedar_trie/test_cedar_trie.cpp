@@ -159,8 +159,3 @@ TEST(TestCedarTrie, PrefixPredict) {
         ASSERT_EQ(dir[longest], std::get<1>(query_result.value()));
     }
 }
-
-TEST(TestGPT2Tokenizer, Basic) {
-    pyis::ops::GPT2Tokenizer tokenizer("D:\\vocab.json", "D:\\merges.txt");
-    tokenizer.Tokenize("D.Va");
-}

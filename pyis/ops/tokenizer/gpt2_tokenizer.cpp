@@ -135,7 +135,6 @@ void GPT2Tokenizer::Add(std::string p_str, int p_id) {
 }
 
 inline std::vector<std::string> GPT2Tokenizer::Tokenize(const std::string& input) {
-    int64_t max_length = 10000;
     std::vector<std::string> res;
 
     if (std::all_of(input.begin(), input.end(), isblank)) {
@@ -145,7 +144,6 @@ inline std::vector<std::string> GPT2Tokenizer::Tokenize(const std::string& input
     auto special_token_split_res = SplitBySpeicalTokens(input);
 
     for (auto& seg_id : special_token_split_res) {
-        if (res.size() >= max_length) break;
 
         if (seg_id.second != -1) {
             res.push_back(seg_id.first);
@@ -156,7 +154,7 @@ inline std::vector<std::string> GPT2Tokenizer::Tokenize(const std::string& input
         TokenWithRegularExp reg;
         reg.Set(cur_input);
 
-        while (res.size() < max_length) {
+        while (true) {
             auto token = reg.GetNextToken();
             auto b = token.first;
             auto tok = token.second;
@@ -172,9 +170,6 @@ inline std::vector<std::string> GPT2Tokenizer::Tokenize(const std::string& input
             bpe(byte_list_);
 
             for (auto p : byte_list_) {
-                if (res.size() >= max_length) {
-                    break;
-                }
                 res.push_back(ConvertIdToToken(p));
             }
         }
@@ -215,8 +210,7 @@ inline std::list<std::pair<std::string, int>> GPT2Tokenizer::SplitBySpeicalToken
     return res;
 }
 
-inline void GPT2Tokenizer::Load(std::istream& vocab_stream, std::istream& merges_stream, const std::string& unk_token,
-                                const std::string& special_tokens) {
+inline void GPT2Tokenizer::Load(std::istream& vocab_stream, std::istream& merges_stream, const std::string& unk_token) {
     rapidjson::Document tok_json;
     rapidjson::IStreamWrapper vocab_wrapper(vocab_stream);
     tok_json.ParseStream(vocab_wrapper);
@@ -226,9 +220,7 @@ inline void GPT2Tokenizer::Load(std::istream& vocab_stream, std::istream& merges
     }
 
     auto it = vocab_map_.find(unk_token);
-    if (it != vocab_map_.end()) {
-        unk_id_ = it->second;
-    } else {
+    if (it == vocab_map_.end()) {
         int id = static_cast<int>(vocab_map_.size());
         vocab_map_[unk_token] = id;
     }
@@ -276,24 +268,6 @@ inline void GPT2Tokenizer::Load(std::istream& vocab_stream, std::istream& merges
         bpe_map_[key] = value;
     }
 
-    if (special_tokens != "") {
-        std::istringstream istrea(special_tokens);
-
-        while (istrea >> line) {
-            if (line.empty()) continue;
-            line = std::regex_replace(line, std::regex("\r"), "");
-            std::string line_32(line);
-            int id = static_cast<int>(vocab_map_.size());
-            auto it = vocab_map_.find(line);
-            if (it != vocab_map_.end()) {
-                id = it->second;
-            } else {
-                vocab_map_[line] = id;
-            }
-            Add(std::move(line_32), id);
-        }
-    }
-
     vocab_map_reverse_.clear();
     for (const auto& ite : vocab_map_) {
         vocab_map_reverse_[ite.second] = ite.first;
@@ -309,7 +283,7 @@ GPT2Tokenizer::GPT2Tokenizer(std::string vocab_file, const std::string& merges_f
 void GPT2Tokenizer::LoadVocabFile() {
     std::ifstream vocab_stream(vocab_file_);
     std::ifstream merges_stream(merges_file_);
-    Load(vocab_stream, merges_stream, "<|endoftext|>", "<|endoftext|>");
+    Load(vocab_stream, merges_stream, unk_token_);
 }
 
 void GPT2Tokenizer::bpe(std::list<int>& vals) const {

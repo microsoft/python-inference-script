@@ -18,26 +18,24 @@ using pyis::ops::GPT2Tokenizer;
 void init_gpt2_tokenizer(py::module& m) {
     py::class_<GPT2Tokenizer, std::shared_ptr<GPT2Tokenizer>>(m, "GPT2Tokenizer",
                                                               R"pbdoc(
-            For tokenizing text into id sequences (same as Bert Tokenizer Fast)
+            GPT2Tokenizer
 
         )pbdoc")
-        .def(py::init<std::string, std::string>(), py::arg("vocab_file"), py::arg("merges_file"),
+        .def(py::init<std::string, std::string, std::string, std::string, std::string, bool>(), py::arg("vocab_file"), py::arg("merges_file"),
+             py::arg("unk_token") = "<|endoftext|>",
+             py::arg("bos_token") = "<|endoftext|>",
+             py::arg("eos_token") = "<|endoftext|>",
+             py::arg("add_prefix_space") = false,
              R"pbdoc(
-                Create a BertTokenizer instance
+                Create a GPT2Tokenizer instance
 
                 Args:
-                    vocab_file_path (str): path to the vocabulary file
-                    do_lower_case (bool): should the tokenizer turn string into lowercase, default to true
-                    do_basic_tokenize (bool): should the tokenizer do basic tokenize first, default to true
-                    cls_token (str): start token symbol, default to '[CLS]'
-                    sep_token (str): end token symbol, default to '[SEP]'
-                    unknown_token (str): unknown token symbol, default to '[UNK]'
-                    pad_token (str): padding token symbol, default to '[PAD]'
-                    mask_token (str): mask token symbol, default to '[MASK]'
-                    tokenize_chinese_chars (bool): should the tokenizer tokenize chinese chars, default to true
-                    strip_accents (bool): shoule the tokenizer strip accents. default to false
-                    suffix_indicator (str): string prefix indicates the token is a suffix of previous token. default to '##'
-
+                    vocab_file_path (str): path to the vocabulary file.
+                    merges_file_path (str): path to the merges file.
+                    unk_token (str): unknown token, default to '<|endoftext|>'
+                    bos_token (str): begin of sentence token, default to '<|endoftext|>'
+                    eos_token (str): end of sentence token, default to '<|endoftext|>'
+                    add_prefix_space: Whether or not to add an initial space to the input. This allows to treat the leading word just as any other word. default to false.
             )pbdoc")
         .def("tokenize", &GPT2Tokenizer::Tokenize, py::arg("query"), py::return_value_policy::move,
              R"pbdoc(
@@ -48,8 +46,6 @@ void init_gpt2_tokenizer(py::module& m) {
             
             Returns:
                     output list of tokens
-
-
         )pbdoc")
         .def("encode",
              static_cast<std::vector<int64_t> (GPT2Tokenizer::*)(const std::string&, int64_t)>(&GPT2Tokenizer::Encode),
