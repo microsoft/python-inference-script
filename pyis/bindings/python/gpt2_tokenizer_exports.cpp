@@ -21,11 +21,9 @@ void init_gpt2_tokenizer(py::module& m) {
             GPT2Tokenizer
 
         )pbdoc")
-        .def(py::init<std::string, std::string, std::string, std::string, std::string, bool>(), py::arg("vocab_file"), py::arg("merges_file"),
-             py::arg("unk_token") = "<|endoftext|>",
-             py::arg("bos_token") = "<|endoftext|>",
-             py::arg("eos_token") = "<|endoftext|>",
-             py::arg("add_prefix_space") = false,
+        .def(py::init<std::string, std::string, std::string, std::string, std::string, bool>(), py::arg("vocab_file"),
+             py::arg("merges_file"), py::arg("unk_token") = "<|endoftext|>", py::arg("bos_token") = "<|endoftext|>",
+             py::arg("eos_token") = "<|endoftext|>", py::arg("add_prefix_space") = false,
              R"pbdoc(
                 Create a GPT2Tokenizer instance
 

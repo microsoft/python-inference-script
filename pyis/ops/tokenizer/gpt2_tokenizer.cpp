@@ -144,7 +144,6 @@ inline std::vector<std::string> GPT2Tokenizer::Tokenize(const std::string& input
     auto special_token_split_res = SplitBySpeicalTokens(input);
 
     for (auto& seg_id : special_token_split_res) {
-
         if (seg_id.second != -1) {
             res.push_back(seg_id.first);
             continue;

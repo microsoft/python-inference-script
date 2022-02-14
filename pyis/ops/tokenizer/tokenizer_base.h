@@ -57,7 +57,6 @@ class Tokenizer {
     std::string vocab_file_;
     std::unordered_map<std::string, int64_t> vocab_map_;
     std::unordered_map<int64_t, std::string> vocab_map_reverse_;
-
 };
 }  // namespace ops
 }  // namespace pyis
