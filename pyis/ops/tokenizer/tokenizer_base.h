@@ -23,9 +23,6 @@ class Tokenizer {
     explicit Tokenizer(std::string vocab_file, std::string cls_token = "[CLS]", std::string sep_token = "[SEP]",
                        std::string unk_token = "[UNK]", std::string pad_token = "[PAD]",
                        std::string mask_token = "[MASK]");
-
-    void EnableTruncation(int64_t max_length, const std::string& strategy = "longest_first",
-                          const std::string& direction = "right");
     void Truncate(std::vector<int64_t>& ids, int64_t max_len);
     void Truncate(std::vector<int64_t>& input1, std::vector<int64_t>& input2, const std::string& truncate_strategy,
                   int64_t max_len);
@@ -60,10 +57,6 @@ class Tokenizer {
     std::string vocab_file_;
     std::unordered_map<std::string, int64_t> vocab_map_;
     std::unordered_map<int64_t, std::string> vocab_map_reverse_;
-    
-    std::string truncation_strategy;
-    std::string truncatoin_direction;
-    int64_t max_length;
 
 };
 }  // namespace ops
