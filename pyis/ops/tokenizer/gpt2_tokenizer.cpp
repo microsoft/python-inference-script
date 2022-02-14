@@ -280,6 +280,16 @@ GPT2Tokenizer::GPT2Tokenizer(std::string vocab_file, const std::string& merges_f
     LoadVocabFile();
 }
 
+std::vector<int64_t> GPT2Tokenizer::AddSpecialToken(const std::vector<int64_t>& code) { return code; }
+
+std::vector<int64_t> GPT2Tokenizer::AddSpecialToken(const std::vector<int64_t>& ids1,
+                                                    const std::vector<int64_t>& ids2) {
+    std::vector<int64_t> result;
+    result.insert(result.end(), ids1.begin(), ids1.end());
+    result.insert(result.end(), ids2.begin(), ids2.end());
+    return result;
+}
+
 void GPT2Tokenizer::LoadVocabFile() {
     std::ifstream vocab_stream(vocab_file_);
     std::ifstream merges_stream(merges_file_);

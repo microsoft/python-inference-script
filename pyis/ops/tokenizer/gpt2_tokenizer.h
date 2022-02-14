@@ -38,6 +38,9 @@ class GPT2Tokenizer : public Tokenizer {
                   const std::string& unk_token = "<|endoftext|>", const std::string& bos_token = "<|endoftext|>",
                   const std::string& eos_token = "<|endoftext|>", bool add_prefix_space = false);
 
+    std::vector<int64_t> AddSpecialToken(const std::vector<int64_t>& code) override;
+    std::vector<int64_t> AddSpecialToken(const std::vector<int64_t>& ids1, const std::vector<int64_t>& ids2) override;
+
   private:
     struct hash_pair {
         template <class T1, class T2>

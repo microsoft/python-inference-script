@@ -39,8 +39,8 @@ class Tokenizer {
                                bool clean_up_tokenization_spaces);
     std::string ConvertIdToToken(int64_t id);
     int64_t ConvertTokenToId(const std::string& str);
-    std::vector<int64_t> AddSpecialToken(const std::vector<int64_t>& code);
-    std::vector<int64_t> AddSpecialToken(const std::vector<int64_t>& ids1, const std::vector<int64_t>& ids2);
+    virtual std::vector<int64_t> AddSpecialToken(const std::vector<int64_t>& code);
+    virtual std::vector<int64_t> AddSpecialToken(const std::vector<int64_t>& ids1, const std::vector<int64_t>& ids2);
     std::vector<int64_t> GenerateTypeId(const std::vector<int64_t>& ids);
     std::vector<int64_t> GenerateTypeId(const std::vector<int64_t>& ids1, const std::vector<int64_t>& ids2);
     std::map<std::string, int64_t> GetVocab();
