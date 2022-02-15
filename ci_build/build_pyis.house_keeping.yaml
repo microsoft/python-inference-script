@@ -31,7 +31,7 @@ jobs:
     displayName: run cpp/cmake format check
   
   - script: |
-      cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DPYTHON=$(pythonVer) -DTORCH_BACKEND=ON -DONNX_BACKEND=OFF -DPYTHON_BACKEND=ON
+      cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DPYTHON=$(pythonVer) -DTORCH_BACKEND=ON -DONNX_BACKEND=ON -DPYTHON_BACKEND=ON
       cmake --build build -j4
     workingDirectory: .
     displayName: build pyis all
