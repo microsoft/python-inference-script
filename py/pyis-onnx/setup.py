@@ -5,7 +5,6 @@ import setuptools
 from setuptools.dist import Distribution
 
 DEPENDENCIES = [
-    'pathlib',
     'packaging'
 ]
 

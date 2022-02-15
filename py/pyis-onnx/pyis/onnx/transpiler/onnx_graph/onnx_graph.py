@@ -7,7 +7,6 @@ import onnx
 from onnx import helper
 from onnx.onnx_ml_pb2 import ValueInfoProto
 from pyis.onnx.transpiler.types import Types
-from pathlib import Path
 
 # https://github.com/onnx/onnx/blob/master/docs/PythonAPIOverview.md
 
@@ -53,7 +52,7 @@ class OnnxGraph:
         return onnx_node
 
     def save(self, model_file: str, output_names: List[str]):
-        model_name = Path(model_file).stem
+        model_name = os.path.splitext(model_file)[0]
         model_dir = os.path.dirname(model_file)   
         graph_def = helper.make_graph(
             self.onnx_nodes,                                    # type: List[NodeProto]

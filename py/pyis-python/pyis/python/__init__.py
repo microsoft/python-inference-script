@@ -2,7 +2,6 @@ __version__ = '0.1.dev2'
 
 import platform
 from packaging import version
-from pathlib import Path
 import os
 import platform
 
