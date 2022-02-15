@@ -3,10 +3,10 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(DIST_PLATFORM "--plat-name=manylinux1_x86_64")
 endif()
-
+message("${Python3_EXECUTABLE}")
 add_custom_target(
     pyis_onnx_whl ALL
-    DEPENDS pyis_onnx MESSAGE ("${Python3_EXECUTABLE}")
+    DEPENDS pyis_onnx
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/pyis/onnx/lib/
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pyis_onnx>
             ${CMAKE_CURRENT_SOURCE_DIR}/pyis/onnx/lib/
