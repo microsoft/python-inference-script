@@ -6,8 +6,7 @@ endif()
 
 add_custom_target(
     pyis_onnx_whl ALL
-    DEPENDS pyis_onnx
-    MESSAGE("${Python3_EXECUTABLE}")
+    DEPENDS pyis_onnx MESSAGE ("${Python3_EXECUTABLE}")
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/pyis/onnx/lib/
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:pyis_onnx>
             ${CMAKE_CURRENT_SOURCE_DIR}/pyis/onnx/lib/
