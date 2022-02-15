@@ -6,7 +6,7 @@ include(CMakeDependentOption)
 
 option(PYTHON_BACKEND "bind operators to onnx or not" ON)
 option(TORCH_BACKEND "bind operators to libtorch or not" ON)
-option(ONNX_BACKEND "bind operators to onnx or not" ON)
+option(ONNX_BACKEND "bind operators to onnx or not" OFF)
 option(USE_SPDLOG "use spdlog for logging or not" OFF)
 option(USE_FMTLIB "use fmtlib for string formating or not" OFF)
 option(PYIS_NO_EXCEPTIONS "turn c++ exceptions on or off(call abort() on any throw statement)" OFF)
