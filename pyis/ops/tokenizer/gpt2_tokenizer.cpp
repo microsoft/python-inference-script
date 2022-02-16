@@ -5,13 +5,13 @@ namespace ops {
 
 class TokenWithRegularExp {
   public:
-    void Set(std::string val) { m_text = ustring(val); }
+    void Set(std::string val) { m_text = Ustring(val); }
 
     std::pair<bool, std::string> GetNextToken() {
         while (!m_text.empty()) {
             auto res = TryMatch();
             if (res.empty()) {
-                m_text = ustring(m_text.substr(1));
+                m_text = Ustring(m_text.substr(1));
                 continue;
             }
             return {true, res};
@@ -23,16 +23,16 @@ class TokenWithRegularExp {
     std::string TryMatch() {
         if ((m_text[0] == U'\'') && (m_text.size() > 1)) {
             if ((m_text[1] == U's') || (m_text[1] == U't') || (m_text[1] == U'm') || (m_text[1] == U'd')) {
-                ustring res = ustring(m_text.substr(0, 2));
-                m_text = ustring(m_text.substr(2));
+                Ustring res = Ustring(m_text.substr(0, 2));
+                m_text = Ustring(m_text.substr(2));
                 return std::string(res);
             }
 
             if (m_text.size() > 2) {
                 if (((m_text[1] == U'r') && (m_text[2] == U'e')) || ((m_text[1] == U'v') && (m_text[2] == U'e')) ||
                     ((m_text[1] == U'l') && (m_text[2] == U'l'))) {
-                    ustring res = ustring(m_text.substr(0, 3));
-                    m_text = ustring(m_text.substr(3));
+                    Ustring res = Ustring(m_text.substr(0, 3));
+                    m_text = Ustring(m_text.substr(3));
                     return std::string(res);
                 }
             }
@@ -44,8 +44,8 @@ class TokenWithRegularExp {
             for (; i < m_text.size(); ++i) {
                 if (!is_unicode_category_L(m_text[i])) break;
             }
-            ustring res = ustring(m_text.substr(0, i));
-            m_text = ustring(m_text.substr(i));
+            Ustring res = Ustring(m_text.substr(0, i));
+            m_text = Ustring(m_text.substr(i));
             return std::string(res);
         }
         if (is_unicode_category_L(m_text[0])) {
@@ -53,8 +53,8 @@ class TokenWithRegularExp {
             for (; i < m_text.size(); ++i) {
                 if (!is_unicode_category_L(m_text[i])) break;
             }
-            ustring res = ustring(m_text.substr(0, i));
-            m_text = ustring(m_text.substr(i));
+            Ustring res = Ustring(m_text.substr(0, i));
+            m_text = Ustring(m_text.substr(i));
             return std::string(res);
         }
 
@@ -64,8 +64,8 @@ class TokenWithRegularExp {
             for (; i < m_text.size(); ++i) {
                 if (!is_unicode_category_N(m_text[i])) break;
             }
-            ustring res = ustring(m_text.substr(0, i));
-            m_text = ustring(m_text.substr(i));
+            Ustring res = Ustring(m_text.substr(0, i));
+            m_text = Ustring(m_text.substr(i));
             return std::string(res);
         }
         if (is_unicode_category_N(m_text[0])) {
@@ -73,8 +73,8 @@ class TokenWithRegularExp {
             for (; i < m_text.size(); ++i) {
                 if (!is_unicode_category_N(m_text[i])) break;
             }
-            ustring res = ustring(m_text.substr(0, i));
-            m_text = ustring(m_text.substr(i));
+            Ustring res = Ustring(m_text.substr(0, i));
+            m_text = Ustring(m_text.substr(i));
             return std::string(res);
         }
 
@@ -84,8 +84,8 @@ class TokenWithRegularExp {
             for (; i < m_text.size(); ++i) {
                 if (!not_category_LNZ(m_text[i])) break;
             }
-            ustring res = ustring(m_text.substr(0, i));
-            m_text = ustring(m_text.substr(i));
+            Ustring res = Ustring(m_text.substr(0, i));
+            m_text = Ustring(m_text.substr(i));
             return std::string(res);
         }
         if (not_category_LNZ(m_text[0])) {
@@ -93,13 +93,13 @@ class TokenWithRegularExp {
             for (; i < m_text.size(); ++i) {
                 if (!not_category_LNZ(m_text[i])) break;
             }
-            ustring res = ustring(m_text.substr(0, i));
-            m_text = ustring(m_text.substr(i));
+            Ustring res = Ustring(m_text.substr(0, i));
+            m_text = Ustring(m_text.substr(i));
             return std::string(res);
         }
 
         // \s+(?!\S)|\s+
-        if ((m_text.size() >= 1) && (is_unicode_category_Z(m_text[0]))) {
+        if ((!m_text.empty()) && (is_unicode_category_Z(m_text[0]))) {
             size_t i = 1;
             for (; i < m_text.size(); ++i) {
                 if (!is_unicode_category_Z(m_text[i])) break;
@@ -107,19 +107,19 @@ class TokenWithRegularExp {
             if ((i > 1) && (i != m_text.size()))  //\s+(?!\S)
             {
                 i--;
-                ustring res = ustring(m_text.substr(0, i));
-                m_text = ustring(m_text.substr(i));
+                Ustring res = Ustring(m_text.substr(0, i));
+                m_text = Ustring(m_text.substr(i));
                 return std::string(res);
             }
             // \s+
-            ustring res = ustring(m_text.substr(0, i));
-            m_text = ustring(m_text.substr(i));
+            Ustring res = Ustring(m_text.substr(0, i));
+            m_text = Ustring(m_text.substr(i));
             return std::string(res);
         }
 
         return "";
     }
-    ustring m_text;
+    Ustring m_text;
 };
 
 void GPT2Tokenizer::Add(std::string p_str, int p_id) {
@@ -130,7 +130,7 @@ void GPT2Tokenizer::Add(std::string p_str, int p_id) {
         }
     } else {
         token_map_[p_str] = p_id;
-        token_list_.push_back(SpecialTokenInfo(std::move(p_str), p_id));
+        token_list_.emplace_back(SpecialTokenInfo(std::move(p_str), p_id));
     }
 }
 
@@ -194,10 +194,10 @@ inline std::list<std::pair<std::string, int>> GPT2Tokenizer::SplitBySpeicalToken
                     new_split_res.emplace_back(str.first.substr(search_pos), -1);
                     break;
                 }
-                auto prefixLen = search_it - it;
-                if (prefixLen != 0) {
-                    new_split_res.emplace_back(str.first.substr(search_pos, prefixLen), -1);
-                    search_pos += prefixLen;
+                auto prefix_len = search_it - it;
+                if (prefix_len != 0) {
+                    new_split_res.emplace_back(str.first.substr(search_pos, prefix_len), -1);
+                    search_pos += prefix_len;
                 }
                 new_split_res.emplace_back(str.first.substr(search_pos, st.str.size()), st.id);
                 it = search_it + st.str.size();
@@ -273,9 +273,10 @@ inline void GPT2Tokenizer::Load(std::istream& vocab_stream, std::istream& merges
     }
 }
 
-GPT2Tokenizer::GPT2Tokenizer(std::string vocab_file, const std::string& merges_file, const std::string& unk_token,
-                             const std::string& bos_token, const std::string& eos_token, bool add_prefix_space)
-    : Tokenizer(vocab_file), merges_file_(merges_file) {
+GPT2Tokenizer::GPT2Tokenizer(std::string vocab_file, std::string merges_file, const std::string& /*unk_token*/,
+                             const std::string& /*bos_token*/, const std::string& /*eos_token*/,
+                             bool /*add_prefix_space*/)
+    : Tokenizer(std::move(vocab_file)), merges_file_(merges_file) {
     LoadVocabFile();
 }
 
@@ -299,7 +300,8 @@ void GPT2Tokenizer::bpe(std::list<int>& vals) const {
     while (vals.size() >= 2) {
         auto pos_it = vals.end();
         int minval = std::numeric_limits<int>::max();
-        int ori_id1 = 0, ori_id2 = 0;
+        int ori_id1 = 0;
+        int ori_id2 = 0;
         int aim_id = 0;
         for (auto it = vals.begin(); it != vals.end(); ++it) {
             auto it2 = it;
@@ -312,7 +314,7 @@ void GPT2Tokenizer::bpe(std::list<int>& vals) const {
                 ori_id2 = *it2;
                 minval = map_it->second.value;
                 pos_it = it;
-                aim_id = map_it->second.id;
+                aim_id = map_it->second.id_;
             }
         }
         if (pos_it == vals.end()) break;

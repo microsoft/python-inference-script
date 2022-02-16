@@ -131,7 +131,7 @@ void replace_all(std::string& data, const std::string& str_to_search, const std:
 
 bool is_unicode_category_L(const char32_t& ch) {
     // Unicode Category L code range
-    const std::vector<std::pair<char32_t, char32_t>> LCategoryTable = {
+    const std::vector<std::pair<char32_t, char32_t>> l_category_table = {
         {65, 90},         {97, 122},        {170, 170},       {181, 181},       {186, 186},       {192, 214},
         {216, 246},       {248, 705},       {710, 721},       {736, 740},       {748, 748},       {750, 750},
         {880, 884},       {886, 887},       {890, 893},       {895, 895},       {902, 902},       {904, 906},
@@ -234,7 +234,7 @@ bool is_unicode_category_L(const char32_t& ch) {
         {126572, 126578}, {126580, 126583}, {126585, 126588}, {126590, 126590}, {126592, 126601}, {126603, 126619},
         {126625, 126627}, {126629, 126633}, {126635, 126651}, {131072, 173782}, {173824, 177972}, {177984, 178205},
         {178208, 183969}, {183984, 191456}, {194560, 195101}};
-    for (const auto& r : LCategoryTable) {
+    for (const auto& r : l_category_table) {
         if (r.first <= ch && ch <= r.second) {
             return true;
         }
@@ -244,7 +244,7 @@ bool is_unicode_category_L(const char32_t& ch) {
 
 bool is_unicode_category_N(const char32_t& ch) {
     // Unicode Category N code range
-    const std::vector<std::pair<char32_t, char32_t>> NCategoryTable = {
+    const std::vector<std::pair<char32_t, char32_t>> n_category_table = {
         {48, 57},         {178, 179},       {185, 185},       {188, 190},       {1632, 1641},     {1776, 1785},
         {1984, 1993},     {2406, 2415},     {2534, 2543},     {2548, 2553},     {2662, 2671},     {2790, 2799},
         {2918, 2927},     {2930, 2935},     {3046, 3058},     {3174, 3183},     {3192, 3198},     {3302, 3311},
@@ -267,7 +267,7 @@ bool is_unicode_category_N(const char32_t& ch) {
         {93008, 93017},   {93019, 93025},   {93824, 93846},   {119520, 119539}, {119648, 119672}, {120782, 120831},
         {123200, 123209}, {123632, 123641}, {125127, 125135}, {125264, 125273}, {126065, 126123}, {126125, 126127},
         {126129, 126132}, {126209, 126253}, {126255, 126269}, {127232, 127244}};
-    for (const auto& r : NCategoryTable) {
+    for (const auto& r : n_category_table) {
         if (r.first <= ch && ch <= r.second) {
             return true;
         }
@@ -277,9 +277,9 @@ bool is_unicode_category_N(const char32_t& ch) {
 
 bool is_unicode_category_Z(const char32_t& ch) {
     // Unicode Category Z code range
-    const std::vector<std::pair<char32_t, char32_t>> ZCategoryTable = {
+    const std::vector<std::pair<char32_t, char32_t>> z_category_table = {
         {32, 32}, {160, 160}, {5760, 5760}, {8192, 8202}, {8232, 8233}, {8239, 8239}, {8287, 8287}, {12288, 12288}};
-    for (const auto& r : ZCategoryTable) {
+    for (const auto& r : z_category_table) {
         if (r.first <= ch && ch <= r.second) {
             return true;
         }
@@ -291,46 +291,46 @@ bool not_category_LNZ(const char32_t& ch) {
     return !is_unicode_category_L(ch) && !is_unicode_category_N(ch) && !is_unicode_category_Z(ch);
 }
 
-ustring::ustring() : std::u32string() {}
+Ustring::Ustring() {}
 
-ustring::ustring(char* str) {
+Ustring::Ustring(char* str) {
     utf8_converter str_cvt;
     assign(str_cvt.from_bytes(str));
 }
 
-ustring::ustring(const char* str) {
+Ustring::Ustring(const char* str) {
     utf8_converter str_cvt;
     assign(str_cvt.from_bytes(str));
 }
 
-ustring::ustring(std::string& str) {
+Ustring::Ustring(std::string& str) {
     utf8_converter str_cvt;
     assign(str_cvt.from_bytes(str));
 }
 
-ustring::ustring(const std::string& str) {
+Ustring::Ustring(const std::string& str) {
     utf8_converter str_cvt;
     assign(str_cvt.from_bytes(str));
 }
 
-ustring::ustring(char32_t* str) : std::u32string(str) {}
+Ustring::Ustring(char32_t* str) : std::u32string(str) {}
 
-ustring::ustring(const char32_t* str) : std::u32string(str) {}
+Ustring::Ustring(const char32_t* str) : std::u32string(str) {}
 
-ustring::ustring(std::u32string& str) : std::u32string(str) {}
+Ustring::Ustring(std::u32string& str) : std::u32string(str) {}
 
-ustring::ustring(std::u32string&& str) : std::u32string(str) {}
+Ustring::Ustring(std::u32string&& str) : std::u32string(str) {}
 
-ustring::ustring(const std::u32string& str) : std::u32string(str) {}
+Ustring::Ustring(const std::u32string& str) : std::u32string(str) {}
 
-ustring::ustring(const std::u32string&& str) : std::u32string(str) {}
+Ustring::Ustring(const std::u32string&& str) : std::u32string(str) {}
 
-ustring::operator std::string() {
+Ustring::operator std::string() {
     utf8_converter str_cvt;
     return str_cvt.to_bytes(*this);
 }
 
-ustring::operator std::string() const {
+Ustring::operator std::string() const {
     utf8_converter str_cvt;
     return str_cvt.to_bytes(*this);
 }

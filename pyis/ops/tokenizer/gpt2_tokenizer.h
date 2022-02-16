@@ -12,7 +12,7 @@ namespace pyis {
 namespace ops {
 
 struct BpeNode {
-    int id;
+    int id_;
     int value;
 };
 
@@ -34,9 +34,9 @@ class GPT2Tokenizer : public Tokenizer {
     std::vector<std::string> Tokenize(const std::string& input);
     std::list<std::pair<std::string, int>> SplitBySpeicalTokens(std::string input) const;
     void Load(std::istream& vocab_stream, std::istream& merges_stream, const std::string& unk_token);
-    GPT2Tokenizer(std::string vocab_file, const std::string& merges_file,
-                  const std::string& unk_token = "<|endoftext|>", const std::string& bos_token = "<|endoftext|>",
-                  const std::string& eos_token = "<|endoftext|>", bool add_prefix_space = false);
+    GPT2Tokenizer(std::string vocab_file, std::string merges_file, const std::string& unk_token = "<|endoftext|>",
+                  const std::string& bos_token = "<|endoftext|>", const std::string& eos_token = "<|endoftext|>",
+                  bool add_prefix_space = false);
 
     std::vector<int64_t> AddSpecialToken(const std::vector<int64_t>& code) override;
     std::vector<int64_t> AddSpecialToken(const std::vector<int64_t>& ids1, const std::vector<int64_t>& ids2) override;

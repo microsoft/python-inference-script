@@ -63,19 +63,19 @@ bool is_unicode_category_Z(const char32_t& ch);
 
 bool not_category_LNZ(const char32_t& ch);
 
-class ustring : public std::u32string {
+class Ustring : public std::u32string {
   public:
-    ustring();
-    explicit ustring(char* str);
-    explicit ustring(const char* str);
-    explicit ustring(std::string& str);
-    explicit ustring(const std::string& str);
-    explicit ustring(char32_t* str);
-    explicit ustring(const char32_t* str);
-    explicit ustring(std::u32string& str);
-    explicit ustring(std::u32string&& str);
-    explicit ustring(const std::u32string& str);
-    explicit ustring(const std::u32string&& str);
+    Ustring();
+    explicit Ustring(char* str);
+    explicit Ustring(const char* str);
+    explicit Ustring(std::string& str);
+    explicit Ustring(const std::string& str);
+    explicit Ustring(char32_t* str);
+    explicit Ustring(const char32_t* str);
+    explicit Ustring(std::u32string& str);
+    explicit Ustring(std::u32string&& str);
+    explicit Ustring(const std::u32string& str);
+    explicit Ustring(const std::u32string&& str);
 
     explicit operator std::string();
     explicit operator std::string() const;
@@ -88,10 +88,10 @@ class ustring : public std::u32string {
 
 namespace std {
 template <>
-struct hash<pyis::ustring> {
-    size_t operator()(const pyis::ustring& __str) const noexcept {
+struct hash<pyis::Ustring> {
+    size_t operator()(const pyis::Ustring& str) const noexcept {
         hash<u32string> standard_hash;
-        return standard_hash(static_cast<u32string>(__str));
+        return standard_hash(static_cast<u32string>(str));
     }
 };
 }  // namespace std
