@@ -12,7 +12,7 @@ class TestFomaFst(unittest.TestCase):
 
     def test_compile(self):
         os.makedirs("./tmp/", exist_ok = True)
-        save_path = str(Path('./tmp/recognize_latin_saved.fst'))
+        save_path = os.path.abspath('./tmp/recognize_latin_saved.fst')
         script_str = r"""
 regex "ad hoc" -> %<latin%> ... %<%/latin%> ;
 apply down avoid writing ad hoc code
