@@ -31,7 +31,7 @@ class TokenWithRegularExp;
 class GPT2Tokenizer : public Tokenizer {
   public:
     void Add(std::string p_str, int p_id);
-    std::vector<std::string> Tokenize(const std::string& input);
+    std::vector<std::string> Tokenize(const std::string& input) override;
     std::list<std::pair<std::string, int>> SplitBySpeicalTokens(std::string input) const;
     void Load(std::istream& vocab_stream, std::istream& merges_stream, const std::string& unk_token);
     GPT2Tokenizer(std::string vocab_file, std::string merges_file, const std::string& unk_token = "<|endoftext|>",
@@ -42,7 +42,7 @@ class GPT2Tokenizer : public Tokenizer {
     std::vector<int64_t> AddSpecialToken(const std::vector<int64_t>& ids1, const std::vector<int64_t>& ids2) override;
 
   private:
-    struct hash_pair {
+    struct HashPair {
         template <class T1, class T2>
         size_t operator()(const std::pair<T1, T2>& p) const {
             auto hash1 = std::hash<T1>{}(p.first);
@@ -54,7 +54,7 @@ class GPT2Tokenizer : public Tokenizer {
     std::list<int> byte_list_;
     std::list<SpecialTokenInfo> token_list_;
     std::unordered_map<std::string, int> token_map_;
-    std::unordered_map<std::pair<int, int>, BpeNode, hash_pair> bpe_map_;
+    std::unordered_map<std::pair<int, int>, BpeNode, HashPair> bpe_map_;
     std::string merges_file_;
     int byte_encoder_[256] = {};
 
