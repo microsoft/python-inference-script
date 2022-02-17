@@ -13,14 +13,14 @@ namespace ops {
 
 struct BpeNode {
     int id_;
-    int value;
+    int value_;
 };
 
 struct SpecialTokenInfo {
-    std::string str;
-    int id;
-    SpecialTokenInfo(std::string p_str, int p_id) : str(std::move(p_str)), id(p_id) {
-        if (str.empty()) {
+    std::string str_;
+    int id_;
+    SpecialTokenInfo(std::string p_str, int p_id) : str_(std::move(p_str)), id_(p_id) {
+        if (str_.empty()) {
             PYIS_THROW("Empty special token.");
         }
     }

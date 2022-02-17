@@ -189,7 +189,7 @@ inline std::list<std::pair<std::string, int>> GPT2Tokenizer::SplitBySpeicalToken
             auto it = str.first.begin();
             size_t search_pos = 0;
             while (it != str.first.end()) {
-                auto search_it = std::search(it, str.first.end(), st.str.begin(), st.str.end());
+                auto search_it = std::search(it, str.first.end(), st.str_.begin(), st.str_.end());
                 if (search_it == str.first.end()) {
                     new_split_res.emplace_back(str.first.substr(search_pos), -1);
                     break;
@@ -199,9 +199,9 @@ inline std::list<std::pair<std::string, int>> GPT2Tokenizer::SplitBySpeicalToken
                     new_split_res.emplace_back(str.first.substr(search_pos, prefix_len), -1);
                     search_pos += prefix_len;
                 }
-                new_split_res.emplace_back(str.first.substr(search_pos, st.str.size()), st.id);
-                it = search_it + st.str.size();
-                search_pos += st.str.size();
+                new_split_res.emplace_back(str.first.substr(search_pos, st.str_.size()), st.id_);
+                it = search_it + st.str_.size();
+                search_pos += st.str_.size();
             }
         }
         std::swap(new_split_res, res);
@@ -309,10 +309,10 @@ void GPT2Tokenizer::bpe(std::list<int>& vals) const {
             if (it2 == vals.end()) break;
             auto map_it = bpe_map_.find({*it, *it2});
             if (map_it == bpe_map_.end()) continue;
-            if (minval > map_it->second.value) {
+            if (minval > map_it->second.value_) {
                 ori_id1 = *it;
                 ori_id2 = *it2;
-                minval = map_it->second.value;
+                minval = map_it->second.value_;
                 pos_it = it;
                 aim_id = map_it->second.id_;
             }
