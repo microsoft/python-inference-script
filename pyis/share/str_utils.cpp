@@ -291,7 +291,7 @@ bool not_category_LNZ(const char32_t& ch) {
     return !is_unicode_category_L(ch) && !is_unicode_category_N(ch) && !is_unicode_category_Z(ch);
 }
 
-Ustring::Ustring() {}
+Ustring::Ustring() = default;
 
 Ustring::Ustring(char* str) {
     utf8_converter str_cvt;
