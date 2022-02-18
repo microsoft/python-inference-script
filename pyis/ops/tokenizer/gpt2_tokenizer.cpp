@@ -273,6 +273,8 @@ inline void GPT2Tokenizer::Load(std::istream& vocab_stream, std::istream& merges
     }
 }
 
+GPT2Tokenizer::GPT2Tokenizer() = default;
+
 GPT2Tokenizer::GPT2Tokenizer(std::string vocab_file, std::string merges_file, const std::string& /*unk_token*/,
                              const std::string& /*bos_token*/, const std::string& /*eos_token*/,
                              bool /*add_prefix_space*/)
@@ -299,7 +301,7 @@ void GPT2Tokenizer::LoadVocabFile() {
 void GPT2Tokenizer::bpe(std::list<int>& vals) const {
     while (vals.size() >= 2) {
         auto pos_it = vals.end();
-        int minval = std::numeric_limits<int>::max();
+        int minval = INT_MAX;
         int ori_id1 = 0;
         int ori_id2 = 0;
         int aim_id = 0;
@@ -330,6 +332,43 @@ void GPT2Tokenizer::bpe(std::list<int>& vals) const {
             pos_it = vals.erase(pos_it);
             *pos_it = aim_id;
         }
+    }
+}
+
+std::string GPT2Tokenizer::Serialize(ModelStorage& fs) {
+    std::string vocab_path = fs.uniq_file("gpt2_tokenizer", ".vocab.json");
+    std::string merges_path = fs.uniq_file("gpt2_tokenizer", ".mergex.txt");
+    fs.add_file(vocab_file_, vocab_path);
+    fs.add_file(merges_file_, merges_path);
+    std::string config_file = fs.uniq_file("gpt2_tokenizer", ".config.json");
+
+    JsonPersistHelper jph(1);
+    jph.add_file("vocab_file", vocab_path);
+    jph.add_file("merges_file", merges_path);
+    jph.add("start_token", cls_token_);
+    jph.add("end_token", sep_token_);
+    jph.add("unk_token", unk_token_);
+    jph.add("pad_token", pad_token_);
+    jph.add("mask_token", mask_token_);
+
+    std::string state = jph.serialize(config_file, fs);
+    return state;
+}
+
+void GPT2Tokenizer::Deserialize(const std::string& state, ModelStorage& fs) {
+    JsonPersistHelper jph(state, fs);
+    int version = jph.version();
+    if (1 == version) {
+        vocab_file_ = FileSystem::join_path({fs.root_dir(), jph.get_file("vocab_file")});
+        merges_file_ = FileSystem::join_path({fs.root_dir(), jph.get_file("merges_file")});
+        cls_token_ = jph.get("start_token");
+        sep_token_ = jph.get("end_token");
+        unk_token_ = jph.get("unk_token");
+        pad_token_ = jph.get("pad_token");
+        mask_token_ = jph.get("mask_token");
+        LoadVocabFile();
+    } else {
+        PYIS_THROW(fmt_str("BertTokenizer v{} is incompatible with the runtime", version).c_str());
     }
 }
 

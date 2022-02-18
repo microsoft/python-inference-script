@@ -3,6 +3,12 @@
 #include <list>
 #include <regex>
 
+#include "pyis/share/cached_object.h"
+#include "pyis/share/exception.h"
+#include "pyis/share/file_system.h"
+#include "pyis/share/json_persist_helper.h"
+#include "pyis/share/model_storage.h"
+#include "pyis/share/model_storage_local.h"
 #include "rapidjson/document.h"
 #include "rapidjson/istreamwrapper.h"
 #include "rapidjson/rapidjson.h"
@@ -28,18 +34,22 @@ struct SpecialTokenInfo {
 
 class TokenWithRegularExp;
 
-class GPT2Tokenizer : public Tokenizer {
+class GPT2Tokenizer : public Tokenizer, public CachedObject<GPT2Tokenizer> {
   public:
     void Add(std::string p_str, int p_id);
     std::vector<std::string> Tokenize(const std::string& input) override;
     std::list<std::pair<std::string, int>> SplitBySpeicalTokens(std::string input) const;
     void Load(std::istream& vocab_stream, std::istream& merges_stream, const std::string& unk_token);
+    GPT2Tokenizer();
     GPT2Tokenizer(std::string vocab_file, std::string merges_file, const std::string& unk_token = "<|endoftext|>",
                   const std::string& bos_token = "<|endoftext|>", const std::string& eos_token = "<|endoftext|>",
                   bool add_prefix_space = false);
 
     std::vector<int64_t> AddSpecialToken(const std::vector<int64_t>& code) override;
     std::vector<int64_t> AddSpecialToken(const std::vector<int64_t>& ids1, const std::vector<int64_t>& ids2) override;
+
+    std::string Serialize(ModelStorage& fs);
+    void Deserialize(const std::string& state, ModelStorage& fs);
 
   private:
     struct HashPair {

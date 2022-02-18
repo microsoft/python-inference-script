@@ -14,6 +14,7 @@ void init_word_dict(::torch::Library& m);
 
 void init_ort_session(::torch::Library& m);
 void init_bert_tokenizer(::torch::Library& m);
+void init_gpt2_tokenizer(::torch::Library& m);
 
 void init_cedar_trie(::torch::Library& m);
 void init_immutable_trie(::torch::Library& m);
@@ -37,6 +38,10 @@ TORCH_LIBRARY(pyis, m) {
 
 #if defined(ENABLE_OP_BERT_TOKENIZER)
     init_bert_tokenizer(m);
+#endif
+
+#if defined(ENABLE_OP_GPT2_TOKENIZER)
+    init_gpt2_tokenizer(m);
 #endif
 
     init_text_feature(m);

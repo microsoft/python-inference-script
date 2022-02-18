@@ -25,6 +25,7 @@ set(ORT
     CACHE STRING "set which version of onnxruntime to use, default to 1.8.0")
 option(ENABLE_OP_ORT_SESSION "onnxruntime extension" ON)
 option(ENABLE_OP_BERT_TOKENIZER "bert tokenizer" ON)
+option(ENABLE_OP_GPT2_TOKENIZER "GPT2Tokenizer" ON)
 option(ENABLE_OP_NGRAM_FEATURIZER "ngram featurizer extension" ON)
 option(ENABLE_OP_REGEX_FEATURIZER "regex featurizer extension" ON)
 option(ENABLE_OP_TEXT_FEATURE_CONCAT "text feature concat extension" ON)

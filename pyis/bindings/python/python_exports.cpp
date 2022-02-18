@@ -42,6 +42,9 @@ PYBIND11_MODULE(pyis_python, m) {
 
 #if defined(ENABLE_OP_BERT_TOKENIZER)
     init_bert_tokenizer(ops);
+#endif
+
+#if defined(ENABLE_OP_GPT2_TOKENIZER)
     init_gpt2_tokenizer(ops);
 #endif
 
