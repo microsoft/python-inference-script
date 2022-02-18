@@ -63,7 +63,7 @@ struct GPT2TokenizerAdaptor : public ::torch::CustomClassHolder {
     std::shared_ptr<GPT2Tokenizer> obj_;
 };
 
-void init_bert_tokenizer(::torch::Library& m) {
+void init_gpt2_tokenizer(::torch::Library& m) {
     m.class_<GPT2TokenizerAdaptor>("BertTokenizer")
         .def(::torch::init<std::string, std::string, std::string, std::string, std::string, bool>(), "",
              {torch::arg("vocab_file"), torch::arg("merges_file") = true, torch::arg("bos_token") = "<|endoftext|>",
