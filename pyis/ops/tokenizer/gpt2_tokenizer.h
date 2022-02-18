@@ -1,3 +1,4 @@
+#include <climits>
 #include <functional>
 #include <iostream>
 #include <list>
