@@ -77,6 +77,10 @@ if(ENABLE_OP_BERT_TOKENIZER)
     add_definitions(-DENABLE_OP_BERT_TOKENIZER)
 endif()
 
+if(ENABLE_OP_GPT2_TOKENIZER)
+    add_definitions(-DENABLE_OP_GPT2_TOKENIZER)
+endif()
+
 if(ENABLE_OP_NGRAM_FEATURIZER)
     add_definitions(-DENABLE_OP_NGRAM_FEATURIZER)
 endif()
