@@ -14,6 +14,7 @@ void init_word_dict(py::module& m);
 
 void init_ort_session(py::module& m);
 void init_bert_tokenizer(py::module& m);
+void init_gpt2_tokenizer(py::module& m);
 
 void init_cedar_trie(py::module& m);
 void init_immutable_trie(py::module& m);
@@ -28,7 +29,6 @@ void init_linear_svm(py::module& m);
 void init_immutable_trie(py::module& m);
 void init_trie(py::module& m);
 void init_linear_chain_crf(py::module& m);
-void init_gpt2_tokenizer(py::module& m);
 
 PYBIND11_MODULE(pyis_python, m) {
     init_model_context(m);

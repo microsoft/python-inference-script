@@ -64,7 +64,7 @@ struct GPT2TokenizerAdaptor : public ::torch::CustomClassHolder {
 };
 
 void init_gpt2_tokenizer(::torch::Library& m) {
-    m.class_<GPT2TokenizerAdaptor>("BertTokenizer")
+    m.class_<GPT2TokenizerAdaptor>("GPT2Tokenizer")
         .def(::torch::init<std::string, std::string, std::string, std::string, std::string, bool>(), "",
              {torch::arg("vocab_file"), torch::arg("merges_file") = true, torch::arg("bos_token") = "<|endoftext|>",
               torch::arg("eos_token") = "<|endoftext|>", torch::arg("unk_token") = "<|endoftext|>",
