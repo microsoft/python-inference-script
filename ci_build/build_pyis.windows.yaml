@@ -86,7 +86,6 @@ jobs:
       cmake --build build --config RelWithDebInfo -- /m:4
       python -m pip install torch==1.9.0
       cmake --build build --config RelWithDebInfo --target RUN_TESTS
-      type D:\a\1\s\build\Testing\Temporary\LastTest.log
     workingDirectory: .
     displayName: build and test pyis-torch190
 
