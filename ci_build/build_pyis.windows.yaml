@@ -85,6 +85,7 @@ jobs:
       cmake -S . -B build -G "Visual Studio 16 2019" -A x64 -DPYTHON=$(pythonVer) -DTORCH="1.9.0" -DTORCH_BACKEND=ON -DONNX_BACKEND=OFF -DPYTHON_BACKEND=OFF
       cmake --build build --config RelWithDebInfo -- /m:4
       python -m pip install torch==1.9.0
+      cmake --build build --config RelWithDebInfo --target RUN_TESTS
     workingDirectory: .
     displayName: build and test pyis-torch190
 
