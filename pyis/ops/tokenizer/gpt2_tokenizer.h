@@ -10,6 +10,7 @@
 #include "pyis/share/json_persist_helper.h"
 #include "pyis/share/model_storage.h"
 #include "pyis/share/model_storage_local.h"
+#include "pyis/share/ustring.h"
 #include "rapidjson/document.h"
 #include "rapidjson/istreamwrapper.h"
 #include "rapidjson/rapidjson.h"

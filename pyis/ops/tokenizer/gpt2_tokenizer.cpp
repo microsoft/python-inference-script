@@ -39,19 +39,19 @@ class TokenWithRegularExp {
         }
 
         // ?\p{L}+
-        if ((m_text_[0] == U' ') && (m_text_.size() > 1) && is_unicode_category_L(m_text_[1])) {
+        if ((m_text_[0] == U' ') && (m_text_.size() > 1) && is_unicode_letter(m_text_[1])) {
             size_t i = 2;
             for (; i < m_text_.size(); ++i) {
-                if (!is_unicode_category_L(m_text_[i])) break;
+                if (!is_unicode_letter(m_text_[i])) break;
             }
             Ustring res = Ustring(m_text_.substr(0, i));
             m_text_ = Ustring(m_text_.substr(i));
             return std::string(res);
         }
-        if (is_unicode_category_L(m_text_[0])) {
+        if (is_unicode_letter(m_text_[0])) {
             size_t i = 1;
             for (; i < m_text_.size(); ++i) {
-                if (!is_unicode_category_L(m_text_[i])) break;
+                if (!is_unicode_letter(m_text_[i])) break;
             }
             Ustring res = Ustring(m_text_.substr(0, i));
             m_text_ = Ustring(m_text_.substr(i));
@@ -59,19 +59,19 @@ class TokenWithRegularExp {
         }
 
         // ?\p{N}+
-        if ((m_text_[0] == U' ') && (m_text_.size() > 1) && is_unicode_category_N(m_text_[1])) {
+        if ((m_text_[0] == U' ') && (m_text_.size() > 1) && is_unicode_number(m_text_[1])) {
             size_t i = 2;
             for (; i < m_text_.size(); ++i) {
-                if (!is_unicode_category_N(m_text_[i])) break;
+                if (!is_unicode_number(m_text_[i])) break;
             }
             Ustring res = Ustring(m_text_.substr(0, i));
             m_text_ = Ustring(m_text_.substr(i));
             return std::string(res);
         }
-        if (is_unicode_category_N(m_text_[0])) {
+        if (is_unicode_number(m_text_[0])) {
             size_t i = 1;
             for (; i < m_text_.size(); ++i) {
-                if (!is_unicode_category_N(m_text_[i])) break;
+                if (!is_unicode_number(m_text_[i])) break;
             }
             Ustring res = Ustring(m_text_.substr(0, i));
             m_text_ = Ustring(m_text_.substr(i));
@@ -99,10 +99,10 @@ class TokenWithRegularExp {
         }
 
         // \s+(?!\S)|\s+
-        if ((!m_text_.empty()) && (is_unicode_category_Z(m_text_[0]))) {
+        if ((!m_text_.empty()) && (is_unicode_seperator(m_text_[0]))) {
             size_t i = 1;
             for (; i < m_text_.size(); ++i) {
-                if (!is_unicode_category_Z(m_text_[i])) break;
+                if (!is_unicode_seperator(m_text_[i])) break;
             }
             if ((i > 1) && (i != m_text_.size()))  //\s+(?!\S)
             {
