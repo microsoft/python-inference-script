@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 #include <codecvt>
+#include <locale>
 #include <string>
 
 namespace pyis {
