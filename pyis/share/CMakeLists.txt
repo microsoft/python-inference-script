@@ -27,7 +27,9 @@ target_sources(
             model_storage_local.h
             model_storage_local.cpp
             file_system.h
-            file_system.cpp)
+            file_system.cpp
+            ustring.h
+            ustring.cpp)
 
 get_filename_component(PYIS_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../" ABSOLUTE)
 target_include_directories(pyis_share PUBLIC ${PYIS_ROOT_DIR} ${RAPIDJSON_INCLUDE_DIR})

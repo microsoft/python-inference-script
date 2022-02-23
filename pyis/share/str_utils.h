@@ -55,43 +55,12 @@ char32_t strip_accent(char32_t c);
 
 void replace_all(std::string& data, const std::string& str_to_search, const std::string& str_to_replace);
 
-bool is_unicode_category_L(const char32_t& ch);
+bool is_unicode_letter(const char32_t& ch);
 
-bool is_unicode_category_N(const char32_t& ch);
+bool is_unicode_number(const char32_t& ch);
 
-bool is_unicode_category_Z(const char32_t& ch);
+bool is_unicode_seperator(const char32_t& ch);
 
 bool not_category_LNZ(const char32_t& ch);
 
-class Ustring : public std::u32string {
-  public:
-    Ustring();
-    explicit Ustring(char* str);
-    explicit Ustring(const char* str);
-    explicit Ustring(std::string& str);
-    explicit Ustring(const std::string& str);
-    explicit Ustring(char32_t* str);
-    explicit Ustring(const char32_t* str);
-    explicit Ustring(std::u32string& str);
-    explicit Ustring(std::u32string&& str);
-    explicit Ustring(const std::u32string& str);
-    explicit Ustring(const std::u32string&& str);
-
-    explicit operator std::string();
-    explicit operator std::string() const;
-
-  private:
-    using utf8_converter = std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t>;
-};
-
 }  // namespace pyis
-
-namespace std {
-template <>
-struct hash<pyis::Ustring> {
-    size_t operator()(const pyis::Ustring& str) const noexcept {
-        hash<u32string> standard_hash;
-        return standard_hash(static_cast<u32string>(str));
-    }
-};
-}  // namespace std
