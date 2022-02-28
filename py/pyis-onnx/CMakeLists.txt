@@ -3,7 +3,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(DIST_PLATFORM "--plat-name=manylinux1_x86_64")
 endif()
-message("DETECTED PYTHON3 => ${Python3_EXECUTABLE}")
+
 add_custom_target(
     pyis_onnx_whl ALL
     DEPENDS pyis_onnx

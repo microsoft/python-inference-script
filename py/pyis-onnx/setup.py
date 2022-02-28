@@ -31,7 +31,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/microsoft/python-inference-script",
     packages=setuptools.find_namespace_packages(where = '.', include = ['pyis.*']),
-    python_requires="~=3.7", # 3.6 or later, but not version 4.0 or later
+    python_requires="~=3.6", # 3.6 or later, but not version 4.0 or later
     # distclass=BinaryDistribution,
     classifiers=CLASSIFIERS,
     install_requires=DEPENDENCIES,
