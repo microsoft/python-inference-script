@@ -61,6 +61,8 @@ bool is_unicode_number(const char32_t& ch);
 
 bool is_unicode_seperator(const char32_t& ch);
 
+bool is_unicode_space(const char32_t& ch);
+
 bool not_category_LNZ(const char32_t& ch);
 
 }  // namespace pyis

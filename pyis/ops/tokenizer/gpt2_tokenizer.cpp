@@ -137,7 +137,7 @@ void GPT2Tokenizer::Add(std::string p_str, int p_id) {
 inline std::vector<std::string> GPT2Tokenizer::Tokenize(const std::string& input) {
     std::vector<std::string> res;
 
-    if (std::all_of(input.begin(), input.end(), is_unicode_seperator)) {
+    if (std::all_of(input.begin(), input.end(), is_unicode_space)) {
         return res;
     }
 
