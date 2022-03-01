@@ -2,7 +2,6 @@
 # Licensed under the MIT license.
 
 import unittest, os
-from pathlib import Path
 from unittest.case import skip
 import numpy as np
 from pyis.python import ops 

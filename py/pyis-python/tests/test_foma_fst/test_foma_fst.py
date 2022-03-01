@@ -2,7 +2,6 @@ import unittest
 from pyis.python import ops
 import os
 import sys
-from pathlib import Path
 
 class TestFomaFst(unittest.TestCase):
     def test_basic(self):
@@ -12,8 +11,8 @@ class TestFomaFst(unittest.TestCase):
         self.assertEqual(expected_res, fst.apply_down(query))
 
     def test_compile(self):
-        Path("./tmp/").mkdir(parents=True, exist_ok=True)
-        save_path = str(Path('./tmp/recognize_latin_saved.fst'))
+        os.makedirs("./tmp/", exist_ok = True)
+        save_path = os.path.abspath('./tmp/recognize_latin_saved.fst')
         script_str = r"""
 regex "ad hoc" -> %<latin%> ... %<%/latin%> ;
 apply down avoid writing ad hoc code

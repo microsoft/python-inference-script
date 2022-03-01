@@ -14,6 +14,7 @@ void init_word_dict(py::module& m);
 
 void init_ort_session(py::module& m);
 void init_bert_tokenizer(py::module& m);
+void init_gpt2_tokenizer(py::module& m);
 
 void init_cedar_trie(py::module& m);
 void init_immutable_trie(py::module& m);
@@ -41,6 +42,10 @@ PYBIND11_MODULE(pyis_python, m) {
 
 #if defined(ENABLE_OP_BERT_TOKENIZER)
     init_bert_tokenizer(ops);
+#endif
+
+#if defined(ENABLE_OP_GPT2_TOKENIZER)
+    init_gpt2_tokenizer(ops);
 #endif
 
 #if defined(ENABLE_OP_CEDAR_TRIE)

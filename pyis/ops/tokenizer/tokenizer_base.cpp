@@ -14,9 +14,7 @@ Tokenizer::Tokenizer(std::string vocab_file, std::string cls_token, std::string 
       sep_token_(std::move(sep_token)),
       unk_token_(std::move(unk_token)),
       pad_token_(std::move(pad_token)),
-      mask_token_(std::move(mask_token)) {
-    LoadVocabFile();
-}
+      mask_token_(std::move(mask_token)) {}
 void Tokenizer::Truncate(std::vector<int64_t>& ids, int64_t max_len) {
     if (max_len < 0 || max_len >= ids.size()) {
         return;
@@ -212,16 +210,16 @@ void Tokenizer::LoadVocabFile() {
 }
 
 void Tokenizer::CleanUpTokenization(std::string& str) {
-    FindAndReplaceAll(str, " .", ".");
-    FindAndReplaceAll(str, " ?", "?");
-    FindAndReplaceAll(str, " !", "!");
-    FindAndReplaceAll(str, " ,", ",");
-    FindAndReplaceAll(str, " ' ", "'");
-    FindAndReplaceAll(str, " n't", "n't");
-    FindAndReplaceAll(str, " 'm", "'m");
-    FindAndReplaceAll(str, " 's", "'s");
-    FindAndReplaceAll(str, " 've", "'ve");
-    FindAndReplaceAll(str, " 're", "'re");
+    replace_all(str, " .", ".");
+    replace_all(str, " ?", "?");
+    replace_all(str, " !", "!");
+    replace_all(str, " ,", ",");
+    replace_all(str, " ' ", "'");
+    replace_all(str, " n't", "n't");
+    replace_all(str, " 'm", "'m");
+    replace_all(str, " 's", "'s");
+    replace_all(str, " 've", "'ve");
+    replace_all(str, " 're", "'re");
 }
 
 }  // namespace ops

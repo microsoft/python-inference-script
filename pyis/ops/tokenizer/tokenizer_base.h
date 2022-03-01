@@ -23,7 +23,6 @@ class Tokenizer {
     explicit Tokenizer(std::string vocab_file, std::string cls_token = "[CLS]", std::string sep_token = "[SEP]",
                        std::string unk_token = "[UNK]", std::string pad_token = "[PAD]",
                        std::string mask_token = "[MASK]");
-
     void Truncate(std::vector<int64_t>& ids, int64_t max_len);
     void Truncate(std::vector<int64_t>& input1, std::vector<int64_t>& input2, const std::string& truncate_strategy,
                   int64_t max_len);
@@ -40,14 +39,14 @@ class Tokenizer {
                                bool clean_up_tokenization_spaces);
     std::string ConvertIdToToken(int64_t id);
     int64_t ConvertTokenToId(const std::string& str);
-    std::vector<int64_t> AddSpecialToken(const std::vector<int64_t>& code);
-    std::vector<int64_t> AddSpecialToken(const std::vector<int64_t>& ids1, const std::vector<int64_t>& ids2);
+    virtual std::vector<int64_t> AddSpecialToken(const std::vector<int64_t>& code);
+    virtual std::vector<int64_t> AddSpecialToken(const std::vector<int64_t>& ids1, const std::vector<int64_t>& ids2);
     std::vector<int64_t> GenerateTypeId(const std::vector<int64_t>& ids);
     std::vector<int64_t> GenerateTypeId(const std::vector<int64_t>& ids1, const std::vector<int64_t>& ids2);
     std::map<std::string, int64_t> GetVocab();
 
   protected:
-    void LoadVocabFile();
+    virtual void LoadVocabFile();
     void CleanUpTokenization(std::string& str);
     std::string cls_token_;
     std::string sep_token_;

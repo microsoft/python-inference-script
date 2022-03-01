@@ -47,12 +47,22 @@ std::wstring str_to_wstr(const std::string& str);
 
 std::string wstr_to_str(const std::wstring& wstr);
 
-bool isCJK(char32_t c);
+bool is_CJK(char32_t c);
 
-bool IsAccent(char32_t c);
+bool is_accent(char32_t c);
 
-char32_t StripAccent(char32_t c);
+char32_t strip_accent(char32_t c);
 
-void FindAndReplaceAll(std::string& data, const std::string& str_to_search, const std::string& str_to_replace);
+void replace_all(std::string& data, const std::string& str_to_search, const std::string& str_to_replace);
+
+bool is_unicode_letter(const char32_t& ch);
+
+bool is_unicode_number(const char32_t& ch);
+
+bool is_unicode_seperator(const char32_t& ch);
+
+bool is_unicode_space(const char32_t& ch);
+
+bool not_category_LNZ(const char32_t& ch);
 
 }  // namespace pyis

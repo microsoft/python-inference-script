@@ -8,6 +8,7 @@ target_sources(
             "model_context_exports.cpp"
             "ort_session_exports.cpp"
             "bert_tokenizer_exports.cpp"
+            "gpt2_tokenizer_exports.cpp"
             "text_featurizers_exports.cpp"
             "cedar_trie_exports.cpp"
             "immutable_trie_exports.cpp"

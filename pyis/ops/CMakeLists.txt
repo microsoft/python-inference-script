@@ -28,7 +28,9 @@ target_sources(
             tokenizer/basic_tokenizer.h
             tokenizer/basic_tokenizer.cpp
             tokenizer/wordpiece_tokenizer.h
-            tokenizer/wordpiece_tokenizer.cpp)
+            tokenizer/wordpiece_tokenizer.cpp
+            tokenizer/gpt2_tokenizer.h
+            tokenizer/gpt2_tokenizer.cpp)
 target_link_libraries(pyis_operators PUBLIC pyis_share)
 
 if(ENABLE_OP_ORT_SESSION)

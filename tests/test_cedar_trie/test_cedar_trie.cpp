@@ -7,6 +7,7 @@
 
 #include "gtest/gtest.h"
 #include "pyis/ops/text/cedar_trie.h"
+#include "pyis/ops/tokenizer/gpt2_tokenizer.h"
 TEST(TestCedarTrie, Basic) {
     pyis::ops::CedarTrie trie;
     trie.Insert("Alpha", 1);

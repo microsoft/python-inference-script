@@ -21,7 +21,7 @@ std::vector<std::string> pyis::ops::BasicTokenizer::Tokenize(const std::string& 
 
     if (strip_accents_) {
         for (auto& c : text) {
-            c = StripAccent(c);
+            c = strip_accent(c);
         }
     }
 
@@ -32,12 +32,12 @@ std::vector<std::string> pyis::ops::BasicTokenizer::Tokenize(const std::string& 
     }
 
     for (auto c : text) {
-        if (tokenize_chinese_chars_ && isCJK(c)) {
+        if (tokenize_chinese_chars_ && is_CJK(c)) {
             push_current_token_and_clear();
             push_single_char_and_clear(c);
             continue;
         }
-        if (strip_accents_ && IsAccent(c)) {
+        if (strip_accents_ && is_accent(c)) {
             continue;
         }
 
